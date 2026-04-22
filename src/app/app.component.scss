@@ -1,0 +1,481 @@
+/* STYLES PRINCIPAUX */
+:root {
+  /* Palette de couleurs personnalisée */
+  --ion-color-primary: #8B4513; /* Marron terre cuite */
+  --ion-color-primary-rgb: 139, 69, 19;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #6B3410;
+  --ion-color-primary-tint: #9C5D34;
+
+  --ion-color-secondary: #2E8B57; /* Vert artisanal */
+  --ion-color-secondary-rgb: 46, 139, 87;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #267349;
+  --ion-color-secondary-tint: #439769;
+
+  --ion-color-tertiary: #E67E22; /* Orange */
+  --ion-color-tertiary-rgb: 230, 126, 34;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #D35400;
+  --ion-color-tertiary-tint: #E98B3E;
+
+  --ion-color-success: #2E8B57; /* Vert artisanal */
+  --ion-color-success-rgb: 46, 139, 87;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #267349;
+  --ion-color-success-tint: #439769;
+
+  --ion-color-warning: #E67E22; /* Orange */
+  --ion-color-warning-rgb: 230, 126, 34;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #D35400;
+  --ion-color-warning-tint: #E98B3E;
+
+  --ion-color-danger: #e74c3c;
+  --ion-color-danger-rgb: 231, 76, 60;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c0392b;
+  --ion-color-danger-tint: #EA6153;
+
+  --ion-color-dark: #333333; /* Gris foncé */
+  --ion-color-dark-rgb: 51, 51, 51;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #2B2B2B;
+  --ion-color-dark-tint: #474747;
+
+  --ion-color-medium: #888888;
+  --ion-color-medium-rgb: 136, 136, 136;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #767676;
+  --ion-color-medium-tint: #949494;
+
+  --ion-color-light: #FDF6EC; /* Blanc cassé */
+  --ion-color-light-rgb: 253, 246, 236;
+  --ion-color-light-contrast: #333333;
+  --ion-color-light-contrast-rgb: 51, 51, 51;
+  --ion-color-light-shade: #E0D8D1;
+  --ion-color-light-tint: #FDF7EE;
+}
+
+/* Styles globaux */
+ion-app {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--ion-color-light);
+}
+
+/* Styles pour le menu latéral */
+ion-menu {
+  ion-header {
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+      --color: var(--ion-color-primary-contrast);
+      --border-width: 0;
+      
+      ion-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  ion-content {
+    --background: var(--ion-color-light);
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }
+
+  ion-list {
+    background: transparent;
+    padding: 0;
+
+    ion-item {
+      --background: transparent;
+      --color: var(--ion-color-dark);
+      --border-color: rgba(139, 69, 19, 0.1); /* Marron terre cuite avec transparence */
+      --padding-start: 20px;
+      --padding-end: 20px;
+      --min-height: 56px;
+      --detail-icon-color: #8B4513; /* Marron terre cuite */
+      --detail-icon-opacity: 0.8;
+      margin: 4px 0;
+
+      ion-icon {
+        color: #8B4513; /* Marron terre cuite */
+        font-size: 22px;
+        margin-right: 16px;
+        transition: color 0.3s ease;
+      }
+
+      ion-label {
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: #333333; /* Gris foncé */
+      }
+
+      &:hover {
+        --background: rgba(139, 69, 19, 0.08); /* Marron terre cuite avec transparence */
+        ion-icon {
+          color: #E67E22; /* Orange */
+        }
+      }
+
+      &.activated {
+        --background: rgba(139, 69, 19, 0.15); /* Marron terre cuite avec transparence */
+        --color: #8B4513; /* Marron terre cuite */
+        border-left: 4px solid #8B4513; /* Marron terre cuite */
+        
+        ion-icon {
+          color: #8B4513; /* Marron terre cuite */
+        }
+        
+        ion-label {
+          font-weight: 600;
+          color: #8B4513; /* Marron terre cuite */
+        }
+      }
+    }
+  }
+}
+
+/* Styles pour la page principale */
+.ion-page {
+  background: var(--ion-color-light);
+}
+
+/* Animation pour les transitions de page */
+ion-router-outlet {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Styles pour les badges de notification */
+ion-badge {
+  &.notification-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    padding: 4px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+/* Styles pour le chargement */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+    --color: var(--ion-color-primary);
+  }
+}
+
+/* Utilitaires */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.p-16 {
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Styles pour l'état de connexion */
+.auth-state {
+  padding: 16px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-weight: 500;
+  
+  &.connected {
+    color: var(--ion-color-success);
+    background: rgba(46, 139, 87, 0.1); /* Vert artisanal avec transparence */
+    border-radius: 8px;
+    margin: 8px;
+  }
+  
+  &.disconnected {
+    color: var(--ion-color-danger);
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    margin: 8px;
+  }
+}
+
+/* Animation pour les interactions */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -6px, 0);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0);
+  }
+  90% {
+    transform: translate3d(0, -1px, 0);
+  }
+}
+
+.bounce {
+  animation: bounce 0.8s ease infinite;
+}
+
+/* Personnalisation du scroll 
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ion-color-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513;  Marron terre cuite 
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+*/
+
+/* Styles pour les séparateurs */
+ion-list {
+  ion-item-divider {
+    --background: #faf6f0;
+    --color: #8B4513; /* Marron terre cuite */
+    --padding-start: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #eee6dc;
+    margin-top: 8px;
+  }
+}
+
+/* Styles pour les items admin */
+ion-item[routerLink*="admin"] {
+  --background: rgba(139, 69, 19, 0.05);
+  border-left: 3px solid #8B4513; /* Marron terre cuite */
+  
+  ion-icon {
+    color: #8B4513 !important; /* Marron terre cuite */
+  }
+  
+  ion-label {
+    font-weight: 600;
+    color: #8B4513 !important; /* Marron terre cuite */
+  }
+}
+
+/* Styles pour le bouton de déconnexion */
+ion-item:last-child {
+  margin-top: 16px;
+  border-top: 1px solid #eee6dc;
+  
+  ion-icon {
+    color: #e74c3c !important;
+  }
+  
+  ion-label {
+    color: #e74c3c !important;
+    font-weight: 600;
+  }
+  
+  &:hover {
+    --background: rgba(231, 76, 60, 0.1) !important;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ion-menu {
+    ion-list {
+      ion-item {
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --min-height: 52px;
+        
+        ion-icon {
+          font-size: 20px;
+          margin-right: 12px;
+        }
+        
+        ion-label {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  ion-menu {
+    ion-header {
+      ion-toolbar {
+        --min-height: 56px;
+        
+        ion-title {
+          font-size: 1.1rem;
+        }
+      }
+    }
+    
+    ion-list {
+      ion-item {
+        --padding-start: 14px;
+        --padding-end: 14px;
+        --min-height: 48px;
+        
+        ion-icon {
+          font-size: 18px;
+          margin-right: 10px;
+        }
+        
+        ion-label {
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}
+
+/* Support pour le mode sombre (optionnel) */
+@media (prefers-color-scheme: dark) {
+  ion-menu {
+    ion-content {
+      --background: #1a1a1a;
+    }
+    
+    ion-list {
+      ion-item {
+        --color: #ffffff;
+        --border-color: rgba(255, 255, 255, 0.1);
+        
+        ion-label {
+          color: #ffffff;
+        }
+        
+        &:hover {
+          --background: rgba(139, 69, 19, 0.2);
+        }
+        
+        &.activated {
+          --background: rgba(139, 69, 19, 0.3);
+        }
+      }
+    }
+  }
+}
+
+/* Animation pour le menu */
+ion-menu {
+  transition: transform 0.3s ease;
+}
+
+/* Styles pour les états focus */
+ion-item:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Amélioration de l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  ion-router-outlet {
+    animation: none;
+  }
+  
+  .bounce {
+    animation: none;
+  }
+}
+
+/* Styles pour les indicateurs de section */
+.menu-section {
+  padding: 12px 20px 4px;
+  font-size: 0.8rem;
+  color: #888888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #eee6dc;
+  margin: 8px 0;
+}
+
+/* Styles pour l'avatar utilisateur */
+.user-avatar {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #8B4513, #E67E22);
+  color: white;
+  
+  ion-avatar {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+    border: 2px solid white;
+  }
+  
+  .user-info {
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+  }
+}

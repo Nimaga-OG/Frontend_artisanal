@@ -1,0 +1,160 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mes Produits</ion-title>
+    <ion-buttons slot="start">
+       <ion-button (click)="retourner()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+  <!-- En-tête avec statistiques -->
+  <div class="stats-container"  *ngIf="!isLoading && produits.length > 0">
+    <div class="stat-item">
+      <ion-icon name="cube-outline" color="primary"></ion-icon>
+      <span class="stat-number">{{ produits.length }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-item">
+      <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+      <span class="stat-number">{{ getStatutCount('disponible') }}</span>
+      <span class="stat-label">Disponibles</span>
+    </div>
+    <div class="stat-item">
+      <ion-icon name="warning-outline" color="warning"></ion-icon>
+      <span class="stat-number">{{ getStatutCount('faible') }}</span>
+      <span class="stat-label">Stock faible</span>
+    </div>
+    <div class="stat-item">
+      <ion-icon name="close-circle-outline" color="danger"></ion-icon>
+      <span class="stat-number">{{ getStatutCount('rupture') }}</span>
+      <span class="stat-label">Rupture</span>
+    </div>
+  </div>
+
+  <!-- Barre de recherche et filtres -->
+  <div class="filters-container" *ngIf="!isLoading && produits.length > 0">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      (ionInput)="filtrerProduits()" 
+      placeholder="Rechercher un produit..."
+      animated="true"
+      class="search-bar">
+    </ion-searchbar>
+
+    <ion-segment [(ngModel)]="sortBy" (ionChange)="trierProduits()">
+      <ion-segment-button value="dateDesc">
+        <ion-label>Récents</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nomAsc">
+        <ion-label>Nom A-Z</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="prixAsc">
+        <ion-label>Prix ↑</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement de vos produits...</p>
+  </div>
+
+  <!-- État vide -->
+  <div class="empty-state" *ngIf="!isLoading && produits.length === 0">
+    <ion-icon name="cube-outline"></ion-icon>
+    <h3>Aucun produit</h3>
+    <p>Commencez par ajouter votre premier produit artisanal</p>
+    <ion-button expand="block" color="primary" (click)="ajouterProduit()">
+      <ion-icon name="add-outline" slot="start"></ion-icon>
+      Ajouter un produit
+    </ion-button>
+  </div>
+
+  <!-- Aucun résultat de recherche -->
+  <div class="empty-state" *ngIf="!isLoading && produits.length > 0 && filteredProduits.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Aucun résultat</h3>
+    <p>Aucun produit ne correspond à votre recherche</p>
+    <ion-button expand="block" color="medium" (click)="searchTerm = ''; filtrerProduits()">
+      Réinitialiser la recherche
+    </ion-button>
+  </div>
+
+  <!-- Liste des produits -->
+  <ion-grid *ngIf="!isLoading && filteredProduits.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let produit of filteredProduits">
+        <ion-card class="produit-card" [class]="'statut-' + produit.statut">
+          <!-- Badge de statut -->
+          <div class="statut-badge" [class]="produit.statut">
+            <ion-icon [name]="produit.statut === 'disponible' ? 'checkmark-circle' : 
+                              produit.statut === 'faible' ? 'warning' : 'close-circle'"></ion-icon>
+            {{ produit.statut === 'disponible' ? 'Disponible' : 
+               produit.statut === 'faible' ? 'Stock faible' : 'Rupture' }}
+          </div>
+
+          <!-- Image du produit -->
+          <div class="image-container" (click)="voirDetails(produit._id)">
+            <img [src]="produit.imageUrl" alt="Image produit" (error)="produit.imageUrl = 'assets/images/placeholder-product.jpg'">
+            <div class="image-overlay">
+              <ion-button fill="clear" color="light">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <ion-card-content>
+            <h3 class="produit-nom" (click)="voirDetails(produit._id)">{{ produit.nom }}</h3>
+            
+            <p class="produit-description">{{ produit.description | truncate: 80 }}</p>
+            
+            <div class="produit-infos">
+              <div class="prix">{{ produit.prix | currency:'XOF':'symbol':'1.0-0' }}</div>
+              <div class="stock" *ngIf="produit.stock !== undefined">
+                Stock: {{ produit.stock }}
+              </div>
+            </div>
+
+            <div class="actions">
+              <ion-button fill="outline" size="small" color="primary" 
+                         (click)="modifierProduit(produit._id)">
+                <ion-icon slot="start" name="create-outline"></ion-icon>
+                Modifier
+              </ion-button>
+
+              <ion-button fill="outline" size="small" color="secondary"
+                         (click)="toggleStatutProduit(produit)">
+                <ion-icon slot="start" [name]="produit.stock > 0 ? 'pause-outline' : 'play-outline'"></ion-icon>
+                {{ produit.stock > 0 ? 'Désactiver' : 'Activer' }}
+              </ion-button>
+
+              <ion-button fill="outline" size="small" color="danger" 
+                         (click)="supprimerProduit(produit._id)">
+                <ion-icon slot="start" name="trash-outline"></ion-icon>
+                Supprimer
+              </ion-button>
+            </div>
+
+            <div class="date-creation" *ngIf="produit.dateCreation || produit.createdAt">
+              Ajouté le {{ (produit.dateCreation || produit.createdAt) | date:'dd/MM/yyyy' }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Bouton flottant pour ajouter un produit -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="ajouterProduit()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

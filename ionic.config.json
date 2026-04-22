@@ -1,0 +1,7 @@
+{
+  "name": "Frontend-artisanat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

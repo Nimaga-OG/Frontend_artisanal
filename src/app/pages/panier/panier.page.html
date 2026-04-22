@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="continuerAchats()" aria-label="Retour aux achats">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Mon Panier</ion-title>
+    <ion-buttons slot="end" *ngIf="panier.length > 0">
+      <ion-button (click)="viderPanier()" color="danger" fill="clear" aria-label="Vider le panier">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- En-tête du panier -->
+  <div class="panier-header" *ngIf="panier.length > 0">
+    <h2>Votre panier ({{ getTotalArticles() }} article{{ getTotalArticles() > 1 ? 's' : '' }})</h2>
+  </div>
+
+  <!-- Liste des produits -->
+  <ion-list *ngIf="panier.length > 0; else videPanier">
+    <ion-card *ngFor="let item of panier; trackBy: trackByProduitId" class="panier-card">
+      <ion-item lines="none">
+        <ion-thumbnail slot="start" class="product-thumbnail">
+          <img [src]="getImageUrl(item.image)" [alt]="'Image de ' + item.nom" (error)="onImageError(item)">
+        </ion-thumbnail>
+
+        <ion-label class="product-info">
+          <h3 class="product-name">{{ item.nom }}</h3>
+          <p class="product-category" *ngIf="item.categorie?.nom">{{ item.categorie.nom }}</p>
+          <p class="product-price">{{ item.prix | number }} FCFA</p>
+          
+          <!-- Indicateur de stock -->
+          <ion-badge *ngIf="item.stock !== undefined" 
+                    [color]="item.stock < 5 ? 'warning' : 'success'" 
+                    class="stock-badge">
+            {{ item.stock }} en stock
+          </ion-badge>
+        </ion-label>
+        
+        <ion-button fill="clear" color="danger" (click)="supprimerProduit(item._id)" class="delete-btn" aria-label="Supprimer ce produit">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-item lines="none" class="quantity-item">
+        <ion-label class="quantity-label">Quantité :</ion-label>
+        
+        <div class="quantity-controls">
+          <ion-button size="small" fill="outline" color="primary" 
+                     (click)="diminuerQuantite(item._id)" 
+                     [disabled]="item.quantite <= 1" aria-label="Diminuer la quantité">
+            <ion-icon name="remove"></ion-icon>
+          </ion-button>
+          
+          <span class="quantity-value">{{ item.quantite }}</span>
+          
+          <ion-button size="small" fill="outline" color="primary" 
+                     (click)="augmenterQuantite(item._id)"
+                     [disabled]="item.stock !== undefined && item.quantite >= item.stock" aria-label="Augmenter la quantité">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </div>
+        
+        <ion-note slot="end" class="item-total">
+          {{ item.prix * item.quantite | number }} FCFA
+        </ion-note>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+
+  <!-- Panier vide -->
+  <ng-template #videPanier>
+    <div class="empty-state">
+      <div class="empty-icon">
+        <ion-icon name="cart-outline"></ion-icon>
+      </div>
+      <h3>Votre panier est vide</h3>
+      <p>Découvrez nos produits artisanaux et remplissez votre panier</p>
+      <ion-button routerLink="/produits" expand="block" color="primary" class="browse-btn">
+        <ion-icon name="storefront-outline" slot="start"></ion-icon>
+        Découvrir les produits
+      </ion-button>
+    </div>
+  </ng-template>
+
+  <!-- Récapitulatif de commande -->
+  <ion-card *ngIf="panier.length > 0" class="summary-card">
+    <ion-card-header>
+      <ion-card-title>Récapitulatif</ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div class="summary-line">
+        <span>Sous-total ({{ getTotalArticles() }} article{{ getTotalArticles() > 1 ? 's' : '' }})</span>
+        <span>{{ getTotal() | number }} FCFA</span>
+      </div>
+      
+      <div class="summary-line">
+        <span>Frais de livraison</span>
+        <span [class.free-shipping]="getFraisLivraison() === 0">
+          {{ getFraisLivraison() === 0 ? 'Gratuit' : (getFraisLivraison() | number) + ' FCFA' }}
+        </span>
+      </div>
+      
+      <div class="summary-divider"></div>
+      
+      <div class="summary-line total">
+        <strong>Total</strong>
+        <strong>{{ getTotalGeneral() | number }} FCFA</strong>
+      </div>
+
+      <div *ngIf="getFraisLivraison() === 0" class="free-shipping-banner">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        <span>Livraison gratuite !</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<!-- Footer avec bouton de commande -->
+<ion-footer *ngIf="panier.length > 0">
+  <ion-toolbar>
+    <ion-title class="footer-title">
+      Total: {{ getTotalGeneral() | number }} FCFA
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="success" (click)="passerCommande()" class="order-btn" aria-label="Passer la commande">
+        <ion-icon name="bag-check-outline" slot="start"></ion-icon>
+        Commander
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

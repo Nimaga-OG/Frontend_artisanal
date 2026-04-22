@@ -1,0 +1,183 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="retour()" fill="clear">
+       <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Mon Profil</ion-title>
+    <ion-buttons slot="end" *ngIf="!isEditing">
+      <ion-button (click)="isEditing = true">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement de votre profil...</p>
+  </div>
+
+  <!-- Profil utilisateur -->
+  <div *ngIf="!isLoading && user" class="profile-container">
+    <!-- En-tête du profil -->
+    <div class="profile-header">
+      <div class="avatar-container" (click)="prendrePhoto()">
+        <div class="avatar" [class.has-photo]="user.photo">
+          <img *ngIf="user.photo" [src]="getImageUrl(user.photo)" alt="Photo profil" class="avatar-image" />
+          <div *ngIf="!user.photo" class="avatar-initials">
+            {{ getInitials(user.nom_utilisateur) }}
+          </div>
+        </div>
+        <div class="avatar-overlay">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h1 class="username">{{ user.nom_utilisateur }}</h1>
+        <p class="email">{{ user.email }}</p>
+        <p class="member-since">Membre depuis {{ formatDate(user.date_creation) }}</p>
+      </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-number">{{ stats.produits }}</div>
+        <div class="stat-label">Produits</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{{ stats.ventes }}</div>
+        <div class="stat-label">Ventes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{{ stats.favoris }}</div>
+        <div class="stat-label">Favoris</div>
+      </div>
+    </div>
+
+    <!-- Formulaire d'édition -->
+    <ion-card *ngIf="isEditing" class="edit-card">
+      <ion-card-header>
+        <ion-card-title>Modifier le profil</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Nom d'utilisateur *</ion-label>
+          <ion-input [(ngModel)]="editData.nom_utilisateur" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Email *</ion-label>
+          <ion-input [(ngModel)]="editData.email" type="email" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Ville</ion-label>
+          <ion-input [(ngModel)]="editData.ville" type="text" placeholder="Votre ville"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Biographie</ion-label>
+          <ion-textarea [(ngModel)]="editData.biographie" rows="4" 
+                       placeholder="Parlez-nous de vous..."></ion-textarea>
+        </ion-item>
+
+        <div class="edit-actions">
+          <ion-button expand="block" color="success" (click)="modifierProfil()">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Enregistrer
+          </ion-button>
+          <ion-button expand="block" color="medium" fill="outline" (click)="annulerModification()">
+            <ion-icon name="close-outline" slot="start"></ion-icon>
+            Annuler
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Informations du profil (mode lecture) -->
+    <ion-card *ngIf="!isEditing" class="info-card">
+      <ion-card-header>
+        <ion-card-title>Informations personnelles</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-item">
+          <ion-icon name="location-outline"></ion-icon>
+          <div class="info-content">
+            <strong>Ville</strong>
+            <p>{{ user.ville || 'Non renseignée' }}</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <div class="info-content">
+            <strong>Biographie</strong>
+            <p>{{ user.biographie || 'Non renseignée' }}</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <div class="info-content">
+            <strong>Membre depuis</strong>
+            <p>{{ formatDate(user.date_creation) }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Actions rapides -->
+    <div class="quick-actions">
+      <ion-button expand="block" color="primary" (click)="selectionnerPhoto()">
+        <ion-icon name="image-outline" slot="start"></ion-icon>
+        Changer la photo
+      </ion-button>
+
+      <ion-button expand="block" color="secondary" routerLink="/changer-mot-de-passe">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        Changer le mot de passe
+      </ion-button>
+
+      <ion-button expand="block" color="warning" routerLink="/mes-produits">
+        <ion-icon name="cube-outline" slot="start"></ion-icon>
+        Mes produits
+      </ion-button>
+
+      <ion-button expand="block" color="tertiary" routerLink="/mes-ventes">
+        <ion-icon name="receipt-outline" slot="start"></ion-icon>
+        Mes ventes
+      </ion-button>
+    </div>
+
+    <!-- Actions de compte -->
+    <div class="account-actions">
+      <ion-button expand="block" color="medium" fill="outline" (click)="deconnexion()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Déconnexion
+      </ion-button>
+
+      <ion-button expand="block" color="danger" fill="outline" (click)="supprimerCompte()">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Supprimer le compte
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+
+<ion-footer *ngIf="!isLoading">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      <small>Artisanat © {{ currentYear }}</small>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>

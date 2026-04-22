@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="retour()" fill="clear">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Mes Favoris</ion-title>
+    <ion-buttons slot="end" *ngIf="favoris.length > 0">
+      <ion-button (click)="viderFavoris()" color="danger" fill="clear">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+  <!-- En-tête avec compteur -->
+  <div class="header-container" *ngIf="!isLoading && favoris.length > 0">
+    <h2>Vos produits favoris ({{ getNombreFavoris() }})</h2>
+    <p>Retrouvez tous vos produits coup de cœur</p>
+  </div>
+
+  <!-- Barre de recherche et filtres -->
+  <div class="filters-container" *ngIf="!isLoading && favoris.length > 0">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      (ionInput)="applyFilters()" 
+      placeholder="Rechercher dans vos favoris..."
+      animated="true"
+      class="search-bar">
+    </ion-searchbar>
+
+    <ion-segment [(ngModel)]="sortBy" (ionChange)="applyFilters()">
+      <ion-segment-button value="dateAdded">
+        <ion-label>Récents</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nomAsc">
+        <ion-label>Nom A-Z</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="prixAsc">
+        <ion-label>Prix ↑</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement de vos favoris...</p>
+  </div>
+
+  <!-- État vide -->
+  <div class="empty-state" *ngIf="!isLoading && favoris.length === 0">
+    <div class="empty-icon">
+      <ion-icon name="heart-outline"></ion-icon>
+    </div>
+    <h3>Aucun favori</h3>
+    <p>Ajoutez des produits à vos favoris en cliquant sur le cœur</p>
+    <ion-button routerLink="/produits" expand="block" color="primary">
+      <ion-icon name="storefront-outline" slot="start"></ion-icon>
+      Découvrir les produits
+    </ion-button>
+  </div>
+
+  <!-- Aucun résultat de recherche -->
+  <div class="empty-state" *ngIf="!isLoading && favoris.length > 0 && filteredFavoris.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Aucun résultat</h3>
+    <p>Aucun favori ne correspond à votre recherche</p>
+    <ion-button expand="block" color="medium" (click)="searchTerm = ''; applyFilters()">
+      Réinitialiser la recherche
+    </ion-button>
+  </div>
+
+  <!-- Liste des favoris -->
+  <div class="favoris-grid" *ngIf="!isLoading && filteredFavoris.length > 0">
+    <ion-card *ngFor="let produit of filteredFavoris; trackBy: trackByProduitId" class="favori-card">
+      <!-- Image du produit -->
+      <div class="image-container" (click)="voirDetails(produit._id)">
+        <img [src]="getImageUrl(produit.image)" alt="{{ produit.nom }}" (error)="produit.imageUrl = 'assets/images/placeholder-product.jpg'">
+        <div class="image-overlay">
+          <ion-button fill="clear" color="light">
+            <ion-icon name="eye-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="favori-badge">
+          <ion-icon name="heart" color="danger"></ion-icon>
+        </div>
+      </div>
+
+      <ion-card-content>
+        <!-- En-tête du produit -->
+        <div class="produit-header">
+          <h3 class="produit-nom" (click)="voirDetails(produit._id)">{{ produit.nom }}</h3>
+          <ion-button fill="clear" color="danger" (click)="toggleFavori(produit._id)" class="remove-btn">
+            <ion-icon name="heart" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+
+        <!-- Informations du produit -->
+        <div class="produit-infos">
+          <span class="produit-categorie" *ngIf="produit.categorie?.nom">
+            {{ produit.categorie.nom }}
+          </span>
+          <span class="produit-ville" *ngIf="produit.ville">
+            <ion-icon name="location-outline"></ion-icon>
+            {{ produit.ville }}
+          </span>
+        </div>
+
+        <p class="produit-description">{{ produit.description | truncate: 80 }}</p>
+
+        <!-- Prix et actions -->
+        <div class="produit-footer">
+          <div class="prix-container">
+            <span class="produit-prix">{{ produit.prix | number }} FCFA</span>
+            <span class="stock-info" *ngIf="produit.stock !== undefined">
+              {{ produit.stock > 0 ? 'En stock' : 'Rupture' }}
+            </span>
+          </div>
+
+          <div class="actions">
+            <ion-button 
+              id="add-to-cart-{{ produit._id }}"
+              size="small" 
+              color="success" 
+              fill="solid"
+              [disabled]="produit.stock === 0"
+              (click)="ajouterAuPanier(produit)">
+              <ion-icon name="cart-outline" slot="start"></ion-icon>
+              Ajouter
+            </ion-button>
+
+            <ion-button 
+              size="small" 
+              color="primary" 
+              fill="outline"
+              (click)="voirDetails(produit._id)">
+              <ion-icon name="eye-outline" slot="start"></ion-icon>
+              Détails
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Résumé -->
+  <div class="summary" *ngIf="!isLoading && filteredFavoris.length > 0">
+    <p>{{ filteredFavoris.length }} produit{{ filteredFavoris.length > 1 ? 's' : '' }} favori{{ filteredFavoris.length > 1 ? 's' : '' }}</p>
+  </div>
+</ion-content>

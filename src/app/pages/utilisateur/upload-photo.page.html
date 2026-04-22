@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Changer Photo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <input type="file" (change)="onFileChange($event)" accept="image/*" />
+  <ion-button expand="block" (click)="upload()">Envoyer</ion-button>
+</ion-content>

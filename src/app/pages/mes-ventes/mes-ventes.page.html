@@ -1,0 +1,283 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="retour()" fill="clear">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Mes Ventes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="exporterVentes()">
+        <ion-icon name="download-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Statistiques -->
+  <div class="stats-container" *ngIf="!loading && ventes.length > 0">
+    <div class="stat-card">
+      <ion-icon name="cart-outline" color="primary"></ion-icon>
+      <div class="stat-content">
+        <span class="stat-number">{{ stats.total }}</span>
+        <span class="stat-label">Ventes totales</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="cash-outline" color="success"></ion-icon>
+      <div class="stat-content">
+        <span class="stat-number">{{ stats.totalAmount | number }} FCFA</span>
+        <span class="stat-label">Chiffre d'affaires</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="calendar-outline" color="warning"></ion-icon>
+      <div class="stat-content">
+        <span class="stat-number">{{ getVentesThisMonth() }}</span>
+        <span class="stat-label">Ventes ce mois</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="wallet-outline" color="tertiary"></ion-icon>
+      <div class="stat-content">
+        <span class="stat-number">{{ getChiffreAffairesMois() | number }} FCFA</span>
+        <span class="stat-label">CA ce mois</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-container" *ngIf="!loading && ventes.length > 0">
+    <ion-searchbar 
+      [(ngModel)]="filters.searchTerm" 
+      (ionInput)="applyFilters()" 
+      placeholder="Rechercher un client, produit ou numéro..."
+      animated="true"
+      class="search-bar">
+    </ion-searchbar>
+
+    <div class="filter-row">
+      <ion-segment [(ngModel)]="filters.statut" (ionChange)="applyFilters()">
+        <ion-segment-button value="tous">
+          <ion-label>Tous</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="en_attente">
+          <ion-label>En attente</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="paye">
+          <ion-label>Payé</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="livre">
+          <ion-label>Livré</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-select [(ngModel)]="filters.dateRange" (ionChange)="applyFilters()" placeholder="Période">
+        <ion-select-option value="7j">7 derniers jours</ion-select-option>
+        <ion-select-option value="30j">30 derniers jours</ion-select-option>
+        <ion-select-option value="90j">3 derniers mois</ion-select-option>
+        <ion-select-option value="annee">Cette année</ion-select-option>
+        <ion-select-option value="tous">Toutes périodes</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="loading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement de vos ventes...</p>
+  </div>
+
+  <!-- État vide -->
+  <div class="empty-state" *ngIf="!loading && ventes.length === 0">
+    <ion-icon name="receipt-outline"></ion-icon>
+    <h3>Aucune vente</h3>
+    <p>Vous n'avez pas encore de ventes enregistrées</p>
+    <ion-button routerLink="/produits" expand="block" color="primary">
+      <ion-icon name="storefront-outline" slot="start"></ion-icon>
+      Voir mes produits
+    </ion-button>
+  </div>
+
+  <!-- Aucun résultat de filtre -->
+  <div class="empty-state" *ngIf="!loading && ventes.length > 0 && filteredVentes.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Aucune vente trouvée</h3>
+    <p>Aucune vente ne correspond à vos critères de recherche</p>
+    <ion-button expand="block" color="medium" (click)="filters = { statut: 'tous', searchTerm: '', dateRange: '30j' }; applyFilters()">
+      Réinitialiser les filtres
+    </ion-button>
+  </div>
+
+  <!-- Liste des ventes -->
+  <div class="ventes-list" *ngIf="!loading && filteredVentes.length > 0">
+    <ion-card *ngFor="let vente of filteredVentes" class="vente-card" [class]="'statut-' + vente.statut">
+      <ion-card-header (click)="voirDetailsVente(vente)">
+        <ion-card-subtitle>
+          <div class="vente-header">
+            <div class="vente-info">
+              <span class="date">{{ formatDate(vente.date) }}</span>
+              <span class="client">
+                {{ vente.acheteur.nom_utilisateur || vente.acheteur.email }}
+              </span>
+            </div>
+            <ion-badge [color]="getStatutColor(vente.statut)" class="statut-badge">
+              <ion-icon [name]="getStatutIcon(vente.statut)" slot="start"></ion-icon>
+              {{ vente.statut | uppercase }}
+            </ion-badge>
+          </div>
+        </ion-card-subtitle>
+        
+        <ion-card-title class="vente-total">
+          {{ vente.total | number }} FCFA
+          <span class="articles-count">({{ getNombreArticles(vente) }} article{{ getNombreArticles(vente) > 1 ? 's' : '' }})</span>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="produits-list">
+          <div *ngFor="let item of vente.produits" class="produit-item">
+            <ion-thumbnail slot="start" *ngIf="item.produit.image">
+              <img [src]="getImageUrl(item.produit.image)" [alt]="item.produit.nom">
+            </ion-thumbnail>
+            <div class="produit-info">
+              <span class="produit-nom">{{ item.produit.nom }}</span>
+              <span class="produit-details">
+                {{ item.quantite }} x {{ item.prixUnitaire | number }} FCFA
+              </span>
+              <span class="sous-total">
+                Sous-total: {{ item.prixUnitaire * item.quantite | number }} FCFA
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vente-details">
+          <!-- Détails de paiement -->
+          <div class="detail-section">
+            <h4>Informations de Paiement</h4>
+            <div class="detail-item">
+              <ion-icon name="card-outline"></ion-icon>
+              <span><strong>Mode:</strong> {{ getModePaiementLabel(vente.modePaiement) }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="vente.modePaiement !== 'especes' && vente.infosPaiement">
+              <ion-icon name="call-outline"></ion-icon>
+              <span><strong>Numéro:</strong> {{ vente.infosPaiement.numero || 'Non spécifié' }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="vente.modePaiement !== 'especes' && vente.infosPaiement">
+              <ion-icon name="receipt-outline"></ion-icon>
+              <span><strong>Transaction:</strong> {{ vente.infosPaiement.transactionId || 'Non spécifié' }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <ion-icon name="cash-outline"></ion-icon>
+              <span><strong>Statut paiement:</strong> {{ vente.statutPaiement === 'paye' ? 'Payé' : 'Non payé' }}</span>
+            </div>
+          </div>
+
+          <!-- Détails de livraison -->
+          <div class="detail-section">
+            <h4>Informations de Livraison</h4>
+            <div class="detail-item" *ngIf="vente.nomComplet">
+              <ion-icon name="person-outline"></ion-icon>
+              <span><strong>Nom:</strong> {{ vente.nomComplet }}</span>
+            </div>
+            <div class="detail-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span><strong>Adresse:</strong> {{ vente.adresseLivraison || 'Non spécifiée' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="vente.telephone">
+              <ion-icon name="call-outline"></ion-icon>
+              <span><strong>Téléphone:</strong> {{ vente.telephone }}</span>
+            </div>
+            <div class="detail-item" *ngIf="vente.note">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span><strong>Note:</strong> {{ vente.note }}</span>
+            </div>
+          </div>
+
+          <!-- Informations acheteur -->
+          <div class="detail-section" *ngIf="vente.acheteur">
+            <h4>Informations Client</h4>
+            <div class="detail-item">
+              <ion-icon name="person-outline"></ion-icon>
+              <span><strong>Nom:</strong> {{ vente.acheteur.nom_utilisateur || 'Non spécifié' }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <ion-icon name="mail-outline"></ion-icon>
+              <span><strong>Email:</strong> {{ vente.acheteur.email }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="vente.acheteur.ville">
+              <ion-icon name="navigate-outline"></ion-icon>
+              <span><strong>Ville:</strong> {{ vente.acheteur.ville }}</span>
+            </div>
+          </div>
+
+          <!-- Informations supplémentaires -->
+          <div class="detail-section" *ngIf="vente.nomComplet || vente.telephone || vente.adresse">
+            <h4>Informations Supplémentaires</h4>
+            <div class="detail-item" *ngIf="vente.nomComplet">
+              <ion-icon name="person-outline"></ion-icon>
+              <span><strong>Nom:</strong> {{ vente.nomComplet }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="vente.telephone">
+              <ion-icon name="call-outline"></ion-icon>
+              <span><strong>Téléphone:</strong> {{ vente.telephone }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="vente.adresse">
+              <ion-icon name="location-outline"></ion-icon>
+              <span><strong>Adresse:</strong> {{ vente.adresse }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" *ngIf="vente.statut !== 'annule'">
+          <ion-button *ngIf="vente.statut === 'en_attente'" size="small" color="success" 
+                     (click)="updateStatut(vente, 'paye')">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Marquer comme payé
+          </ion-button>
+          
+          <ion-button *ngIf="vente.statut === 'paye'" size="small" color="primary" 
+                     (click)="updateStatut(vente, 'livre')">
+            <ion-icon name="car-outline" slot="start"></ion-icon>
+            Marquer comme livré
+          </ion-button>
+
+          <ion-button *ngIf="vente.statut !== 'livre'" size="small" color="danger" fill="outline"
+                     (click)="updateStatut(vente, 'annule')">
+            <ion-icon name="close-outline" slot="start"></ion-icon>
+            Annuler
+          </ion-button>
+
+          <!-- Bouton pour contacter le client -->
+          <ion-button *ngIf="vente.acheteur.telephone" size="small" color="tertiary" fill="outline"
+                     (click)="contacterClient(vente.acheteur.telephone)">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            Contacter
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Résumé du filtre -->
+  <div class="filter-summary" *ngIf="!loading && filteredVentes.length > 0">
+    <p>
+      {{ filteredVentes.length }} vente{{ filteredVentes.length > 1 ? 's' : '' }} 
+      trouvée{{ filteredVentes.length > 1 ? 's' : '' }}
+      ({{ ventes.length }} au total)
+    </p>
+  </div>
+</ion-content>

@@ -1,0 +1,566 @@
+/* STYLES PRINCIPAUX */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #8B4513; /* Marron terre cuite */
+    --color: white;
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+.loading-container {
+  text-align: center;
+  padding: 80px 20px;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    color: #8B4513; /* Marron terre cuite */
+  }
+  
+  p {
+    color: #666666;
+    margin: 0;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+/* En-tête du profil */
+.profile-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 24px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  border: 1px solid #eee6dc;
+}
+
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    
+    .avatar-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B4513, #E67E22); /* Marron terre cuite vers Orange */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: 3px solid #8B4513; /* Marron terre cuite */
+  
+  &.has-photo {
+    background: none;
+    border-color: #E67E22; /* Orange */
+  }
+  
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initials {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(139, 69, 19, 0.7); /* Marron terre cuite avec transparence */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  ion-icon {
+    color: white;
+    font-size: 1.8rem;
+  }
+}
+
+.profile-info {
+  .username {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333333; /* Gris foncé */
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+    
+    @media (max-width: 480px) {
+      font-size: 1.4rem;
+    }
+  }
+  
+  .email {
+    color: #8B4513; /* Marron terre cuite */
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .member-since {
+    color: #888888;
+    font-size: 0.9rem;
+    margin: 0;
+    font-style: italic;
+  }
+}
+
+/* Statistiques */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+  
+  .stat-item {
+    background: white;
+    padding: 20px 16px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(139, 69, 19, 0.08);
+    border: 1px solid #eee6dc;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(139, 69, 19, 0.12);
+    }
+    
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #8B4513; /* Marron terre cuite */
+      margin-bottom: 6px;
+      
+      @media (max-width: 480px) {
+        font-size: 1.5rem;
+      }
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      color: #666666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    gap: 12px;
+    
+    .stat-item {
+      padding: 16px 12px;
+    }
+  }
+}
+
+/* Cartes */
+ion-card {
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(139, 69, 19, 0.1);
+  margin-bottom: 24px;
+  background: white;
+  border: 1px solid #eee6dc;
+  
+  ion-card-header {
+    padding: 20px 20px 12px;
+    background: #f8f6f2;
+    border-bottom: 2px solid #8B4513; /* Marron terre cuite */
+    
+    ion-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #333333; /* Gris foncé */
+      text-align: center;
+      
+      @media (max-width: 480px) {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.edit-card {
+  .edit-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    ion-button {
+      --border-radius: 12px;
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      font-weight: 600;
+      
+      &:first-child {
+        --background: #2E8B57; /* Vert artisanal */
+        --color: white;
+        --background-hover: #267349;
+      }
+      
+      &:last-child {
+        --background: #888888;
+        --color: white;
+        --background-hover: #666666;
+      }
+    }
+  }
+}
+
+.info-card {
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0e9e0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    ion-icon {
+      color: #8B4513; /* Marron terre cuite */
+      font-size: 1.4rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+      min-width: 24px;
+    }
+    
+    .info-content {
+      flex: 1;
+      
+      strong {
+        display: block;
+        color: #333333; /* Gris foncé */
+        margin-bottom: 4px;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      
+      p {
+        color: #666666;
+        margin: 0;
+        line-height: 1.5;
+        font-size: 0.95rem;
+        
+        &:empty::before {
+          content: 'Non renseigné';
+          color: #999999;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+/* Actions */
+.quick-actions, .account-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+  
+  ion-button {
+    --border-radius: 14px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    font-weight: 600;
+    font-size: 1rem;
+    
+    ion-icon {
+      font-size: 1.3rem;
+      margin-right: 8px;
+    }
+    
+    /* Couleurs des boutons d'actions */
+    &[color="primary"] {
+      --background: #8B4513; /* Marron terre cuite */
+      --color: white;
+      --background-hover: #6B3410;
+    }
+    
+    &[color="secondary"] {
+      --background: #2E8B57; /* Vert artisanal */
+      --color: white;
+      --background-hover: #267349;
+    }
+    
+    &[color="warning"] {
+      --background: #E67E22; /* Orange */
+      --color: white;
+      --background-hover: #d35400;
+    }
+    
+    &[color="tertiary"] {
+      --background: #888888;
+      --color: white;
+      --background-hover: #666666;
+    }
+  }
+}
+
+.account-actions {
+  margin-bottom: 32px;
+  
+  ion-button {
+    &:first-child {
+      --background: #888888;
+      --color: white;
+      --background-hover: #666666;
+    }
+    
+    &:last-child {
+      --background: #e74c3c;
+      --color: white;
+      --background-hover: #c0392b;
+    }
+  }
+}
+
+/* Footer */
+ion-footer {
+  background: white;
+  border-top: 2px solid #8B4513; /* Marron terre cuite */
+  
+  ion-toolbar {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+  }
+  
+  ion-title {
+    font-size: 0.85rem;
+    color: #666666;
+    font-weight: 500;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 0 16px 20px;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    
+    .stat-item {
+      padding: 18px 12px;
+      
+      .stat-number {
+        font-size: 1.6rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 20px 16px;
+    margin-bottom: 20px;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    
+    .stat-item {
+      padding: 16px 10px;
+      
+      .stat-number {
+        font-size: 1.4rem;
+      }
+      
+      .stat-label {
+        font-size: 0.8rem;
+      }
+    }
+  }
+  
+  ion-card {
+    margin-bottom: 20px;
+    
+    ion-card-header {
+      padding: 16px 16px 10px;
+    }
+    
+    ion-card-content {
+      padding: 16px;
+    }
+  }
+  
+  .quick-actions, .account-actions {
+    gap: 12px;
+    
+    ion-button {
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+
+/* Améliorations pour l'accessibilité */
+ion-button:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Animation de rafraîchissement */
+ion-refresher {
+  --color: #8B4513; /* Marron terre cuite */
+}
+
+/* Support pour le mode paysage */
+@media (max-height: 500px) and (orientation: landscape) {
+  .profile-header {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .stats-container {
+    margin-bottom: 20px;
+  }
+  
+  .quick-actions, .account-actions {
+    margin-bottom: 20px;
+  }
+}
+
+/* Styles pour les champs de formulaire */
+ion-item {
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-bottom: 16px;
+  --background: #ffffff;
+  --border-color: #e0d6c9;
+  
+  ion-label[position="stacked"] {
+    font-weight: 600;
+    color: #333333; /* Gris foncé */
+    font-size: 0.95rem;
+  }
+  
+  ion-input, ion-textarea {
+    --color: #333333; /* Gris foncé */
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  &.item-has-focus {
+    --border-color: #E67E22; /* Orange */
+    --highlight-color-focused: #E67E22; /* Orange */
+    
+    ion-label[position="stacked"] {
+      color: #E67E22; /* Orange */
+    }
+  }
+}
+
+/* Animation d'apparition */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-header,
+.stats-container,
+ion-card {
+  animation: fadeInUp 0.5s ease;
+}
+
+.stats-container { animation-delay: 0.1s; }
+ion-card { animation-delay: 0.2s; }
+.quick-actions { animation-delay: 0.3s; }
+.account-actions { animation-delay: 0.4s; }
+
+.currentYear {
+  font-size: 0.85rem;
+  color: #666666;
+}

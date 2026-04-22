@@ -1,0 +1,157 @@
+<ion-content class="ion-padding" [class.dark-theme]="false">
+  <div class="container">
+    <ion-card class="register-card">
+      <ion-card-header>
+        <ion-card-title>Créer un compte</ion-card-title>
+        <ion-card-subtitle>Rejoignez notre communauté ArtinalSUGU</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form (ngSubmit)="register()" #registerForm="ngForm">
+          <!-- Nom d'utilisateur -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!nom_utilisateur_valide && nom_utilisateur">
+            <ion-label position="floating">Nom d'utilisateur</ion-label>
+            <ion-input 
+              [(ngModel)]="nom_utilisateur" 
+              name="nom_utilisateur" 
+              type="text" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+          </ion-item>
+          <div class="error-message" *ngIf="!nom_utilisateur_valide && nom_utilisateur">
+            Le nom d'utilisateur doit contenir au moins 3 caractères
+          </div>
+
+          <!-- Email -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!email_valide && email">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input 
+              [(ngModel)]="email" 
+              name="email" 
+              type="email" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+          </ion-item>
+          <div class="error-message" *ngIf="!email_valide && email">
+            Veuillez entrer une adresse email valide
+          </div>
+
+          <!-- Téléphone avec drapeau et indicatif Mali -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!telephone_valide && telephone">
+            <ion-label position="floating">Téléphone</ion-label>
+            <div class="phone-input-container" slot="start">
+              <div class="flag-container" (click)="toggleCountryDropdown()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNjAwIj48cGF0aCBmaWxsPSIjZmZjZTAwIiBkPSJtMCwwaDkwMHY2MDBoLTkwMHoiLz48cGF0aCBmaWxsPSIjMDBjMTAwIiBkPSJtMCwwaDMwMHY2MDBoLTMwMHoiLz48cGF0aCBmaWxsPSIjY2UwMDJhIiBkPSJtNjAwLDBoMzAwdjYwMGgtMzAweiIvPjwvc3ZnPg==" alt="Drapeau du Mali" class="flag-icon" />
+                <span class="country-code">+223</span>
+                <ion-icon name="chevron-down-outline" class="dropdown-icon"></ion-icon>
+              </div>
+            </div>
+            <ion-input 
+              [(ngModel)]="telephone" 
+              name="telephone" 
+              type="tel" 
+              required
+              placeholder="XX XX XX XX"
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="!telephone_valide && telephone">
+            Veuillez entrer un numéro de téléphone valide (8 chiffres)
+          </div>
+
+          <!-- Mot de passe -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!mot_de_passe_valide && mot_de_passe">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input 
+              [(ngModel)]="mot_de_passe" 
+              name="mot_de_passe" 
+              type="password" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          </ion-item>
+          
+          <!-- Indicateur de force du mot de passe -->
+          <div class="password-strength" *ngIf="mot_de_passe">
+            <p>Force du mot de passe:</p>
+            <div class="strength-meter">
+              <div class="strength-bar" [class]="'level-' + evaluerForceMotDePasse()"></div>
+            </div>
+            <div class="strength-tips" *ngIf="evaluerForceMotDePasse() < 4">
+              <small>Conseil: Utilisez des majuscules, des chiffres et des caractères spéciaux</small>
+            </div>
+          </div>
+          
+          <div class="error-message" *ngIf="!mot_de_passe_valide && mot_de_passe">
+            Le mot de passe doit contenir au moins 6 caractères
+          </div>
+
+          <!-- Confirmation mot de passe -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!confirmation_valide && confirmer_mot_de_passe">
+            <ion-label position="floating">Confirmer le mot de passe</ion-label>
+            <ion-input 
+              [(ngModel)]="confirmer_mot_de_passe" 
+              name="confirmer_mot_de_passe" 
+              type="password" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          </ion-item>
+          <div class="error-message" *ngIf="!confirmation_valide && confirmer_mot_de_passe">
+            Les mots de passe ne correspondent pas
+          </div>
+
+          <!-- Photo de profil -->
+          <div class="file-upload-section">
+            <ion-item>
+              <ion-label>Photo de profil (optionnel)</ion-label>
+              <input 
+                type="file" 
+                accept="image/*" 
+                (change)="onFileSelected($event)" 
+                #fileInput
+                style="display: none">
+              <ion-button fill="clear" (click)="fileInput.click()">
+                <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+                Choisir une image
+              </ion-button>
+            </ion-item>
+            
+            <!-- Prévisualisation de l'image -->
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Aperçu de l'image">
+              <ion-button fill="clear" color="danger" (click)="removeImage()">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <!-- Bouton d'inscription -->
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            class="ion-margin-top"
+            [disabled]="!form_valide">
+            Créer un compte
+          </ion-button>
+        </form>
+
+        <ion-text color="medium">
+          <p class="ion-text-center login-link">Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

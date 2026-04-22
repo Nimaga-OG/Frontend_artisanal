@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Produits</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="ajouterProduit()">
+        <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pulling-icon="chevron-down-circle-outline"
+      pulling-text="Tirer pour rafraîchir"
+      refreshing-spinner="crescent"
+      refreshing-text="Actualisation...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Barre de recherche -->
+  <ion-searchbar 
+    [(ngModel)]="recherche" 
+    (ionInput)="rechercherProduits()" 
+    placeholder="Rechercher un produit..."
+    animated="true"
+    class="search-bar">
+  </ion-searchbar>
+
+  <!-- Options de tri -->
+  <div class="tri-options">
+    <ion-segment [(ngModel)]="triActif" (ionChange)="trierProduits(triActif)">
+      <ion-segment-button value="nom">
+        <ion-label>Nom</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="prix-croissant">
+        <ion-label>Prix ↑</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="prix-decroissant">
+        <ion-label>Prix ↓</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- Catégories sous forme de chips -->
+  <div class="categorie-chips">
+    <ion-chip
+      [color]="!categorieSelectionnee ? 'primary' : 'medium'"
+      (click)="reinitialiserFiltre()"
+    >
+      <ion-label>Toutes</ion-label>
+    </ion-chip>
+
+    <ion-chip
+      *ngFor="let categorie of categories"
+      [color]="categorieSelectionnee === categorie._id ? 'primary' : 'medium'"
+      (click)="filtrerParCategorie(categorie._id)"
+    >
+      <ion-label>{{ categorie.nom }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Chargement des produits...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-container" *ngIf="erreurChargement && !isLoading">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>Erreur lors du chargement des produits</p>
+    <ion-button fill="clear" (click)="recharger()">
+      <ion-icon name="refresh" slot="start"></ion-icon>
+      Réessayer
+    </ion-button>
+  </div>
+
+  <!-- Message aucun résultat -->
+  <div class="empty-state" *ngIf="!isLoading && !erreurChargement && produitsFiltres.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Aucun produit trouvé</h3>
+    <p>Essayez de modifier vos filtres ou votre recherche</p>
+    <ion-button fill="clear" (click)="reinitialiserFiltre()">
+      Réinitialiser les filtres
+    </ion-button>
+  </div>
+
+  <!-- Grille de produits -->
+  <ion-grid *ngIf="!isLoading && !erreurChargement && produitsFiltres.length > 0">
+    <ion-row>
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let produit of produitsFiltres">
+        <ion-card class="produit-card" (click)="voirDetails(produit._id)">
+          <!-- Badge favori -->
+          <div class="favori-badge" (click)="toggleFavori(produit._id, $event)">
+            <ion-icon 
+              [name]="favoris.has(produit._id) ? 'heart' : 'heart-outline'" 
+              [color]="favoris.has(produit._id) ? 'danger' : 'medium'">
+            </ion-icon>
+          </div>
+
+          <!-- Badge stock -->
+          <div class="stock-badge" *ngIf="!produit.enStock">
+            Rupture de stock
+          </div>
+
+          <div class="image-container">
+            <img [src]="produit.imageUrl" alt="Image produit" />
+          </div>
+
+          <ion-card-header>
+            <ion-card-title>{{ produit.nom }}</ion-card-title>
+            <ion-card-subtitle>{{ produit.categorie?.nom }}</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p class="description">{{ produit.description | truncate: 60 }}</p>
+            <h3 class="prix">{{ produit.prix }} FCFA</h3>
+            
+            <div class="btn-actions">
+              <ion-button size="small" fill="outline" (click)="$event.stopPropagation(); voirDetails(produit._id)">
+                Détails
+              </ion-button>
+              <ion-button 
+                size="small" 
+                [id]="'add-to-cart-' + produit._id"
+                [disabled]="!produit.enStock"
+                (click)="$event.stopPropagation(); ajouterAuPanier(produit)">
+                <ion-icon name="cart" slot="start"></ion-icon>
+                {{ produit.enStock ? 'Ajouter' : 'Rupture' }}
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Bouton flottant Aller au Panier -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="allerAuPanier()">
+      <span class="panier-avec-badge">
+        <ion-icon name="cart"></ion-icon>
+        <ion-badge *ngIf="quantiteTotale > 0" color="danger" class="badge-panier">
+          {{ quantiteTotale }}
+        </ion-badge>
+      </span>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,199 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="retour()" fill="clear">
+       <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Mes Commandes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+  <!-- Statistiques des commandes -->
+  <div class="stats-container" *ngIf="!isLoading && commandes.length > 0">
+    <div class="stat-item">
+      <ion-icon name="receipt-outline" color="primary"></ion-icon>
+      <span class="stat-number">{{ getTotalCommandes() }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div *ngFor="let statut of ['en_attente', 'confirme', 'livre']" class="stat-item">
+      <ion-icon [name]="statutConfig[statut].icon" [color]="statutConfig[statut].color"></ion-icon>
+      <span class="stat-number">{{ getStatutCount(statut) }}</span>
+      <span class="stat-label">{{ statutConfig[statut].text }}</span>
+    </div>
+  </div>
+
+  <!-- Filtres et recherche -->
+  <div class="filters-container" *ngIf="!isLoading && commandes.length > 0">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      (ionInput)="filtrerCommandes()" 
+      placeholder="Rechercher une commande ou produit..."
+      animated="true"
+      class="search-bar">
+    </ion-searchbar>
+
+    <div class="filters-row">
+      <ion-segment [(ngModel)]="statutFiltre" (ionChange)="filtrerCommandes()">
+        <ion-segment-button value="tous">
+          <ion-label>Tous</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="en_attente">
+          <ion-label>En attente</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="confirme">
+          <ion-label>Confirmées</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="livre">
+          <ion-label>Livrées</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-select [(ngModel)]="triFiltre" (ionChange)="trierCommandes()" placeholder="Trier par" interface="popover">
+        <ion-select-option value="dateDesc">Plus récentes</ion-select-option>
+        <ion-select-option value="dateAsc">Plus anciennes</ion-select-option>
+        <ion-select-option value="totalDesc">Total décroissant</ion-select-option>
+        <ion-select-option value="totalAsc">Total croissant</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement de vos commandes...</p>
+  </div>
+
+  <!-- Aucune commande -->
+  <div class="empty-state" *ngIf="!isLoading && commandes.length === 0">
+    <ion-icon name="receipt-outline"></ion-icon>
+    <h3>Aucune commande</h3>
+    <p>Vous n'avez pas encore passé de commande</p>
+    <ion-button routerLink="/produits" expand="block" color="primary">
+      <ion-icon name="storefront-outline" slot="start"></ion-icon>
+      Découvrir les produits
+    </ion-button>
+  </div>
+
+  <!-- Aucun résultat de filtre -->
+  <div class="empty-state" *ngIf="!isLoading && commandes.length > 0 && filteredCommandes.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Aucune commande trouvée</h3>
+    <p>Aucune commande ne correspond à vos critères de recherche</p>
+    <ion-button expand="block" color="medium" (click)="searchTerm = ''; statutFiltre = 'tous'; filtrerCommandes()">
+      Réinitialiser les filtres
+    </ion-button>
+  </div>
+
+  <!-- Liste des commandes -->
+  <div *ngIf="!isLoading && filteredCommandes.length > 0">
+    <ion-card *ngFor="let commande of filteredCommandes; trackBy: trackByCommandeId" class="commande-card">
+      <!-- En-tête de la commande -->
+      <ion-card-header class="commande-header">
+        <div class="header-top">
+          <ion-card-title>Commande #{{ commande._id | slice: -8 }}</ion-card-title>
+          <ion-badge [color]="commande.statutConfig.color" class="statut-badge">
+            <ion-icon [name]="commande.statutConfig.icon"></ion-icon>
+            {{ commande.statutConfig.text }}
+          </ion-badge>
+        </div>
+        
+        <ion-card-subtitle>
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ commande.createdAt | date: 'dd/MM/yyyy à HH:mm' }}
+        </ion-card-subtitle>
+
+        <div class="header-infos">
+          <span class="produits-count">
+            <ion-icon name="cube-outline"></ion-icon>
+            {{ getNombreProduits(commande) }} article(s)
+          </span>
+          <span class="total-commande">
+            {{ commande.total | currency:'XOF':'symbol':'1.0-0' }}
+          </span>
+        </div>
+      </ion-card-header>
+
+      <!-- Produits de la commande -->
+      <ion-card-content>
+        <div class="produits-list">
+          <div *ngFor="let item of commande.produits" class="produit-item">
+            <img 
+              [src]="getImageUrl(item.produit?.image)" 
+              [alt]="item.produit?.nom"
+              class="produit-image"
+              (error)="item.produit.image = 'assets/images/placeholder-product.jpg'">
+            
+            <div class="produit-info">
+              <h4 class="produit-nom">{{ item.produit?.nom || 'Produit indisponible' }}</h4>
+              <p class="produit-quantite">Quantité: {{ item.quantite }}</p>
+              <p class="produit-prix">{{ (item.produit?.prix || 0) * item.quantite | currency:'XOF':'symbol':'1.0-0' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations de livraison et paiement -->
+        <div class="commande-details">
+          <ion-accordion-group>
+            <ion-accordion value="details">
+              <ion-item slot="header" color="light">
+                <ion-label>Détails de la commande</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content">
+                <div class="detail-item">
+                  <ion-icon name="location-outline"></ion-icon>
+                  <span><strong>Adresse:</strong> {{ commande.adresse || 'Non spécifiée' }}</span>
+                </div>
+                
+                <div class="detail-item">
+                  <ion-icon name="card-outline"></ion-icon>
+                  <span><strong>Paiement:</strong> {{ commande.modePaiement }} ({{ commande.statutPaiement }})</span>
+                </div>
+
+                <div class="detail-item" *ngIf="commande.dateLivraison">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span><strong>Livraison prévue:</strong> {{ commande.dateLivraison | date: 'dd/MM/yyyy' }}</span>
+                </div>
+
+                <div class="detail-item" *ngIf="commande.numeroSuivi">
+                  <ion-icon name="navigate-outline"></ion-icon>
+                  <span><strong>Numéro de suivi:</strong> {{ commande.numeroSuivi }}</span>
+                </div>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+
+        <!-- Actions -->
+        <div class="commande-actions">
+          <ion-button *ngIf="commande.statut === 'en_attente'" fill="outline" color="danger" size="small" 
+                     (click)="annulerCommande(commande)">
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+            Annuler
+          </ion-button>
+
+          <ion-button *ngIf="commande.statut === 'en_cours'" fill="outline" color="primary" size="small"
+                     (click)="suivreCommande(commande)">
+            <ion-icon name="navigate-outline" slot="start"></ion-icon>
+            Suivre
+          </ion-button>
+
+          <ion-button *ngIf="commande.statut === 'livre'" fill="outline" color="success" size="small"
+                     (click)="recommander(commande)">
+            <ion-icon name="repeat-outline" slot="start"></ion-icon>
+            Recommander
+          </ion-button>
+
+          <ion-button fill="outline" color="medium" size="small" routerLink="/produits">
+            <ion-icon name="cart-outline" slot="start"></ion-icon>
+            Commander à nouveau
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,361 @@
+ion-content {
+  --background: #f8f9fa;
+}
+
+/* En-tête */
+.header-container {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+  }
+
+  p {
+    color: #7f8c8d;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* Filtres */
+.filters-container {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .search-bar {
+    --background: #f8f9fa;
+    --border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  ion-segment {
+    --background: #f8f9fa;
+    
+    ion-segment-button {
+      --indicator-color: var(--ion-color-primary);
+      --color: #7f8c8d;
+      --color-checked: white;
+      
+      ion-label {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+/* États de chargement et vide */
+.loading-container, .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  .empty-icon {
+    font-size: 64px;
+    color: #ff6b6b;
+    margin-bottom: 16px;
+    
+    ion-icon {
+      font-size: 4rem;
+    }
+  }
+
+  ion-icon {
+    font-size: 64px;
+    color: #bdc3c7;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  p {
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+}
+
+/* Grille des favoris */
+.favoris-grid {
+  display: grid;
+  gap: 20px;
+}
+
+/* Carte favori */
+.favori-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 0;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Container d'image */
+.image-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    ion-button {
+      --padding-start: 16px;
+      --padding-end: 16px;
+    }
+  }
+
+  .favori-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 8px;
+    z-index: 10;
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+
+    .image-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+/* Contenu de la carte */
+ion-card-content {
+  padding: 16px;
+
+  .produit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+
+    .produit-nom {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 0;
+      cursor: pointer;
+      flex: 1;
+      
+      &:hover {
+        color: var(--ion-color-primary);
+      }
+    }
+
+    .remove-btn {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin-left: 8px;
+    }
+  }
+
+  .produit-infos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    .produit-categorie {
+      background: var(--ion-color-light);
+      color: var(--ion-color-medium);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .produit-ville {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #7f8c8d;
+      font-size: 0.8rem;
+
+      ion-icon {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .produit-description {
+    color: #546e7a;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .produit-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .prix-container {
+      .produit-prix {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ion-color-primary);
+        display: block;
+      }
+
+      .stock-info {
+        font-size: 0.7rem;
+        color: var(--ion-color-success);
+        font-weight: 500;
+
+        &:not(:empty)::before {
+          content: "•";
+          margin: 0 4px;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      ion-button {
+        --border-radius: 8px;
+        --padding-top: 8px;
+        --padding-bottom: 8px;
+        font-size: 0.8rem;
+        margin: 0;
+
+        ion-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+/* Résumé */
+.summary {
+  text-align: center;
+  padding: 16px;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 16px;
+}
+
+/* Animation pour l'ajout au panier */
+@keyframes addToCart {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.adding {
+  animation: addToCart 0.5s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .favoris-grid {
+    gap: 16px;
+  }
+
+  .image-container {
+    height: 180px;
+  }
+
+  .produit-footer {
+    flex-direction: column;
+    align-items: stretch !important;
+
+    .actions {
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .filters-container {
+    padding: 12px;
+  }
+
+  .produit-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .actions {
+    flex-direction: column;
+    
+    ion-button {
+      width: 100%;
+    }
+  }
+}
+
+/* Pipe de truncation pour la description */
+.produit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

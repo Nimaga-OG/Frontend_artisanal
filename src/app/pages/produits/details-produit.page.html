@@ -1,0 +1,211 @@
+<!-- details-produit.page.html -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="router.navigate(['/produits'])">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Détails du produit</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="partagerProduit()">
+        <ion-icon name="share-social" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!isLoading; else loading" class="ion-padding">
+  <!-- Galerie d'images -->
+  <div class="image-gallery" *ngIf="imagePrincipale">
+    <div class="main-image-container">
+      <!-- Bouton plein écran -->
+      <div class="fullscreen-btn" (click)="ouvrirPleinEcran()" title="Voir en plein écran">
+        <ion-icon name="expand-outline"></ion-icon>
+      </div>
+
+      <img [src]="imagePrincipale" alt="Image produit" class="main-image" (click)="ouvrirPleinEcran()" />
+
+      <!-- Navigation entre images -->
+      <ion-button *ngIf="aImagesSupplementaires" fill="clear" color="light" class="nav-btn prev" 
+                 (click)="changerImage(-1)">
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="aImagesSupplementaires" fill="clear" color="light" class="nav-btn next"
+                 (click)="changerImage(1)">
+        <ion-icon name="chevron-forward"></ion-icon>
+      </ion-button>
+
+      <!-- Indicateur de favori -->
+      <div class="favori-indicator" (click)="toggleFavori()">
+        <ion-icon [name]="estFavori() ? 'heart' : 'heart-outline'" 
+                 [color]="estFavori() ? 'danger' : 'light'"></ion-icon>
+      </div>
+
+      <!-- ✅ NOUVEAU : Indicateur du nombre d'images -->
+      <div class="image-counter-badge" *ngIf="aImagesSupplementaires">
+        {{ currentImageIndex + 1 }}/{{ nombreTotalImages }}
+      </div>
+    </div>
+
+    <!-- ✅ AMÉLIORÉ : Indicateurs de miniatures -->
+    <div class="image-thumbnails" *ngIf="aImagesSupplementaires">
+      <div *ngFor="let image of images; let i = index" 
+           class="thumbnail" 
+           [class.active]="i === currentImageIndex"
+           (click)="selectionnerImage(i)">
+        <img [src]="image" [alt]="'Miniature ' + (i + 1)" />
+        <div class="thumbnail-overlay" *ngIf="i === 0">
+          <ion-icon name="star"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ NOUVEAU : Indicateur texte du nombre d'images -->
+    <div class="images-info" *ngIf="aImagesSupplementaires">
+      <ion-text color="medium">
+        <small>
+          <ion-icon name="images-outline"></ion-icon>
+          {{ nombreTotalImages }} photo{{ nombreTotalImages > 1 ? 's' : '' }} disponible{{ nombreTotalImages > 1 ? 's' : '' }}
+        </small>
+      </ion-text>
+    </div>
+  </div>
+
+  <!-- Informations du produit -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ produit.nom }}</ion-card-title>
+      <ion-card-subtitle>
+        <span class="price">{{ produit.prix }} FCFA</span>
+        <ion-badge [color]="stockColor" class="stock-badge">
+          {{ stockMessage }}
+        </ion-badge>
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div class="description-section">
+        <h3>Description</h3>
+        <p>{{ produit.description }}</p>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Catégorie: {{ produit.categorie?.nom }}</span>
+        </div>
+        
+        <div class="detail-item" *ngIf="produit.ville">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>Ville: {{ produit.ville }}</span>
+        </div>
+        
+        <div class="detail-item" *ngIf="produit.stock !== undefined">
+          <ion-icon name="cube-outline"></ion-icon>
+          <span>Stock: {{ produit.stock }} unité(s)</span>
+        </div>
+
+        <!-- ✅ NOUVEAU : Indicateur du nombre d'images -->
+        <div class="detail-item" *ngIf="aImagesSupplementaires">
+          <ion-icon name="images-outline"></ion-icon>
+          <span>{{ nombreTotalImages }} photo{{ nombreTotalImages > 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+
+      <!-- Actions principales -->
+      <div class="action-buttons">
+        <ion-button id="add-to-cart-btn" expand="block" color="success" 
+                   (click)="ajouterAuPanier()" [disabled]="!estEnStock">
+          <ion-icon slot="start" name="cart-outline"></ion-icon>
+          {{ estEnStock ? 'Ajouter au panier' : 'Rupture de stock' }}
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" color="primary" (click)="toggleFavori()">
+          <ion-icon slot="start" [name]="estFavori() ? 'heart' : 'heart-outline'"></ion-icon>
+          {{ estFavori() ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Produits similaires -->
+  <div class="similar-products" *ngIf="produitsSimilaires.length > 0">
+    <h3>Produits similaires</h3>
+    <div class="similar-grid">
+      <div class="similar-product" *ngFor="let produit of produitsSimilaires" 
+           (click)="allerVersProduitSimilaire(produit._id)">
+        <img [src]="produit.imageUrl" [alt]="produit.nom" />
+        <div class="similar-info">
+          <h4>{{ produit.nom }}</h4>
+          <p class="price">{{ produit.prix }} FCFA</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- MODAL PLEIN ÉCRAN -->
+<ion-modal [isOpen]="isPleinEcran" (didDismiss)="fermerPleinEcran()" class="fullscreen-modal">
+  <ng-template>
+    <ion-content class="fullscreen-content">
+      <div class="fullscreen-container">
+        <!-- Bouton de fermeture -->
+        <ion-button class="close-btn" fill="clear" color="light" (click)="fermerPleinEcran()">
+          <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+
+        <!-- Image en plein écran -->
+        <div class="fullscreen-image-container">
+          <div 
+            *ngIf="isPleinEcran"
+            (touchstart)="onTouchStart($event)"
+            (touchend)="onTouchEnd($event)"
+            (keydown)="onKeyDown($event)"
+            tabindex="0"
+            class="touch-area"
+          >
+            <img [src]="imagePrincipale" [alt]="'Image produit ' + (currentImageIndex + 1)" class="fullscreen-image" />
+          </div>
+          
+          <!-- Navigation -->
+          <ion-button *ngIf="aImagesSupplementaires" fill="clear" color="light" class="nav-btn-full prev" 
+                     (click)="changerImage(-1)">
+            <ion-icon name="chevron-back"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="aImagesSupplementaires" fill="clear" color="light" class="nav-btn-full next"
+                     (click)="changerImage(1)">
+            <ion-icon name="chevron-forward"></ion-icon>
+          </ion-button>
+
+          <!-- Indicateur de position -->
+          <div class="image-counter" *ngIf="aImagesSupplementaires">
+            {{ currentImageIndex + 1 }} / {{ nombreTotalImages }}
+          </div>
+        </div>
+
+        <!-- Miniatures en bas -->
+        <div class="fullscreen-thumbnails" *ngIf="aImagesSupplementaires">
+          <div *ngFor="let image of images; let i = index" 
+               class="fullscreen-thumbnail" 
+               [class.active]="i === currentImageIndex"
+               (click)="selectionnerImage(i)">
+            <img [src]="image" [alt]="'Miniature ' + (i + 1)" />
+            <div class="thumbnail-indicator" *ngIf="i === currentImageIndex">
+              <ion-icon name="checkmark"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ng-template #loading>
+  <ion-content class="ion-padding loading-content">
+    <div class="loading-center">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Chargement du produit...</p>
+    </div>
+  </ion-content>
+</ng-template>

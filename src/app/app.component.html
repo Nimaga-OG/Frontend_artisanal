@@ -1,0 +1,82 @@
+<ion-app> 
+  <!-- Menu latéral -->
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <ion-menu-button autoHide="false"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list lines="full">
+        <!-- Utilisateur connecté -->
+        <ng-container *ngIf="authService.user$ | async as user">
+          <ion-item routerLink="/profil" menuClose>
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-label>Mon profil</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/produits" routerDirection="forward" menuClose>
+            <ion-icon slot="start" name="storefront-outline"></ion-icon>
+            <ion-label>Produits</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/mes-produits" menuClose>
+            <ion-icon slot="start" name="cube-outline"></ion-icon>
+            <ion-label>Mes produits</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/favoris" menuClose>
+            <ion-icon slot="start" name="heart-outline"></ion-icon>
+            <ion-label>Mes favoris</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/mes-commandes" menuClose>
+            <ion-icon slot="start" name="receipt-outline"></ion-icon>
+            <ion-label>Mes commandes</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/mes-ventes" menuClose>
+            <ion-icon slot="start" name="cash-outline"></ion-icon>
+            <ion-label>Mes ventes</ion-label>
+          </ion-item>
+
+          <!-- Si admin -->
+          <ng-container *ngIf="user.role === 'admin'">
+            <ion-item routerLink="/admin-utilisateurs" menuClose>
+              <ion-icon slot="start" name="people-outline"></ion-icon>
+              <ion-label> DASHBOARD</ion-label>
+            </ion-item>
+
+            
+          </ng-container>
+
+          <ion-item button (click)="logout()" menuClose>
+            <ion-icon slot="start" name="log-out-outline"></ion-icon>
+            <ion-label>Déconnexion</ion-label>
+          </ion-item>
+        </ng-container>
+
+        <!-- Si NON connecté -->
+        <ng-container *ngIf="!(authService.user$ | async)">
+          <ion-item routerLink="/login" menuClose>
+            <ion-icon slot="start" name="log-in-outline"></ion-icon>
+            <ion-label>Connexion</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/register" menuClose>
+            <ion-icon slot="start" name="person-add-outline"></ion-icon>
+            <ion-label>Créer un compte</ion-label>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content">
+    <ion-router-outlet></ion-router-outlet>
+  </div>
+</ion-app>

@@ -1,0 +1,507 @@
+/* STYLES PRINCIPAUX */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #8B4513; /* Marron terre cuite */
+    --color: white;
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+/* Container des statistiques */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  border: 1px solid #eee6dc;
+
+  .stat-item {
+    text-align: center;
+    padding: 16px 12px;
+    background: #faf6f0;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      background: #f8f6f2;
+    }
+    
+    ion-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+      
+      &[color="primary"] {
+        color: #8B4513; /* Marron terre cuite */
+      }
+      
+      &[color="success"] {
+        color: #2E8B57; /* Vert artisanal */
+      }
+      
+      &[color="warning"] {
+        color: #E67E22; /* Orange */
+      }
+      
+      &[color="danger"] {
+        color: #e74c3c;
+      }
+    }
+    
+    .stat-number {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #333333; /* Gris foncé */
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      color: #666666;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Filtres et recherche */
+.filters-container {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  border: 1px solid #eee6dc;
+
+  .search-bar {
+    --background: #faf6f0;
+    --border-radius: 12px;
+    --box-shadow: 0 2px 6px rgba(139, 69, 19, 0.08);
+    --color: #333333; /* Gris foncé */
+    --placeholder-color: #888888;
+    margin-bottom: 16px;
+  }
+
+  ion-segment {
+    --background: #faf6f0;
+    --border-radius: 12px;
+    
+    ion-segment-button {
+      --indicator-color: #8B4513; /* Marron terre cuite */
+      --color: #666666;
+      --color-checked: white;
+      --border-radius: 10px;
+      
+      ion-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* États de chargement et vide */
+.loading-container, .empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666666;
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    color: #8B4513; /* Marron terre cuite */
+  }
+
+  ion-icon {
+    font-size: 64px;
+    color: #8B4513; /* Marron terre cuite */
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  h3 {
+    color: #333333; /* Gris foncé */
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin-bottom: 28px;
+    line-height: 1.5;
+    font-size: 1rem;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  ion-button {
+    --border-radius: 12px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+    
+    &[color="primary"] {
+      --background: #8B4513; /* Marron terre cuite */
+      --color: white;
+      --background-hover: #6B3410;
+    }
+    
+    &[color="medium"] {
+      --background: #888888;
+      --color: white;
+      --background-hover: #666666;
+    }
+  }
+}
+
+/* Carte produit */
+.produit-card {
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(139, 69, 19, 0.1);
+  overflow: hidden;
+  margin-bottom: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+  border: 1px solid #eee6dc;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(139, 69, 19, 0.15);
+  }
+
+  /* Badge de statut */
+  .statut-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.disponible {
+      background: #2E8B57; /* Vert artisanal */
+      color: white;
+    }
+
+    &.faible {
+      background: #E67E22; /* Orange */
+      color: white;
+    }
+
+    &.rupture {
+      background: #e74c3c;
+      color: white;
+    }
+  }
+
+  /* Container d'image */
+  .image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(139, 69, 19, 0.7); /* Marron terre cuite avec transparence */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      ion-button {
+        --color: white;
+        --background-hover: rgba(255, 255, 255, 0.2);
+        
+        ion-icon {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.08);
+      }
+
+      .image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding: 20px;
+
+    .produit-nom {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333333; /* Gris foncé */
+      margin-bottom: 10px;
+      cursor: pointer;
+      line-height: 1.3;
+      
+      &:hover {
+        color: #8B4513; /* Marron terre cuite */
+      }
+    }
+
+    .produit-description {
+      color: #666666;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .produit-infos {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .prix {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #8B4513; /* Marron terre cuite */
+      }
+
+      .stock {
+        font-size: 0.85rem;
+        color: #666666;
+        background: #f8f6f2;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: 1px solid #eee6dc;
+      }
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      ion-button {
+        --border-radius: 10px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0;
+
+        &[color="primary"] {
+          --background: #8B4513; /* Marron terre cuite */
+          --color: white;
+          --background-hover: #6B3410;
+        }
+        
+        &[color="secondary"] {
+          --background: #2E8B57; /* Vert artisanal */
+          --color: white;
+          --background-hover: #267349;
+        }
+        
+        &[color="danger"] {
+          --background: #e74c3c;
+          --color: white;
+          --background-hover: #c0392b;
+        }
+
+        ion-icon {
+          font-size: 18px;
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .date-creation {
+      font-size: 0.8rem;
+      color: #888888;
+      text-align: center;
+      padding-top: 12px;
+      border-top: 1px solid #f0e9e0;
+      font-style: italic;
+    }
+  }
+}
+
+/* Bouton flottant */
+ion-fab {
+  margin-bottom: 24px;
+  margin-right: 24px;
+  
+  ion-fab-button {
+    --background: #8B4513; /* Marron terre cuite */
+    --background-activated: #6B3410;
+    --color: white;
+    --box-shadow: 0 4px 16px rgba(139, 69, 19, 0.3);
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .produit-card {
+    .image-container {
+      height: 200px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-container {
+    padding: 16px;
+  }
+
+  .produit-card {
+    margin-bottom: 20px;
+    
+    .image-container {
+      height: 180px;
+    }
+    
+    ion-card-content {
+      padding: 16px;
+      
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+  
+  ion-fab {
+    margin-bottom: 20px;
+    margin-right: 20px;
+  }
+}
+
+/* Pipe de truncation pour la description */
+.produit-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+
+/* Améliorations pour l'accessibilité */
+ion-button:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Support pour le mode paysage */
+@media (max-height: 500px) and (orientation: landscape) {
+  .stats-container {
+    margin-bottom: 16px;
+  }
+  
+  .empty-state {
+    padding: 40px 20px;
+  }
+}
+
+/* Animation de rafraîchissement */
+ion-refresher {
+  --color: #8B4513; /* Marron terre cuite */
+}
+
+/* Animation d'apparition */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats-container,
+.filters-container,
+.produit-card {
+  animation: fadeInUp 0.5s ease;
+}
+
+.produit-card:nth-child(1) { animation-delay: 0.1s; }
+.produit-card:nth-child(2) { animation-delay: 0.2s; }
+.produit-card:nth-child(3) { animation-delay: 0.3s; }

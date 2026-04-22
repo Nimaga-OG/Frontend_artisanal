@@ -1,0 +1,19 @@
+<ion-header translucent>
+  <ion-toolbar color="primary">
+    <ion-title>Confirmation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="confirmation-container" *ngIf="success">
+    <ion-icon name="checkmark-circle-outline" class="icon-success"></ion-icon>
+    <h2>Commande confirmée !</h2>
+    <p>Merci pour votre achat. Vous allez être redirigé...</p>
+  </div>
+
+  <div class="confirmation-container" *ngIf="!success">
+    <ion-icon name="close-circle-outline" class="icon-failure"></ion-icon>
+    <h2>Échec de la commande</h2>
+    <p>Un problème est survenu. Veuillez réessayer.</p>
+  </div>
+</ion-content>

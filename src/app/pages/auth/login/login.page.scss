@@ -1,0 +1,381 @@
+/* STYLES PRINCIPAUX */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background: #FDF6EC; /* Blanc cassé */
+  
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+  }
+}
+
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(139, 69, 19, 0.15);
+  background: white;
+  border: 1px solid #eee6dc;
+  
+  @media (max-width: 600px) {
+    padding: 1.5rem;
+  }
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo-icon {
+  font-size: 3rem;
+  color: #8B4513; /* Marron terre cuite */
+  background: rgba(139, 69, 19, 0.1);
+  padding: 1.2rem;
+  border-radius: 50%;
+  border: 2px solid #8B4513; /* Marron terre cuite */
+}
+
+ion-card-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #333333; /* Gris foncé */
+  
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
+}
+
+ion-card-subtitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #666666;
+  font-size: 1rem;
+}
+
+/* Styles des champs de formulaire */
+ion-item {
+  --border-radius: 12px;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 1.5rem;
+  --background: #faf6f0;
+  --border-color: #e0d6c9;
+  
+  ion-icon[slot="start"] {
+    color: #8B4513; /* Marron terre cuite */
+    margin-right: 12px;
+    font-size: 1.2rem;
+  }
+  
+  ion-button[slot="end"] {
+    --color: #8B4513; /* Marron terre cuite */
+    --background-hover: rgba(139, 69, 19, 0.1);
+  }
+  
+  &.invalid {
+    --highlight-color-focused: #e74c3c;
+    --border-color: #e74c3c;
+    
+    ion-icon[slot="start"] {
+      color: #e74c3c;
+    }
+  }
+  
+  &.item-has-focus {
+    --border-color: #E67E22; /* Orange */
+    --highlight-color-focused: #E67E22; /* Orange */
+    
+    ion-icon[slot="start"] {
+      color: #E67E22; /* Orange */
+    }
+  }
+}
+
+ion-label {
+  color: #333333 !important; /* Gris foncé */
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+ion-input {
+  color: #333333 !important; /* Gris foncé */
+  font-size: 1rem !important;
+  background: transparent !important;
+  caret-color: #E67E22 !important; /* Orange */
+  font-weight: 500 !important;
+}
+
+ion-input::part(native) {
+  color: #333333 !important;
+  background: transparent !important;
+  padding: 16px 8px !important;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin: -1rem 0 1.5rem 1rem;
+  font-weight: 500;
+  background: rgba(231, 76, 60, 0.1);
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Options de connexion */
+.options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  ion-item {
+    --background: transparent;
+    --inner-padding-end: 0;
+    margin-bottom: 0;
+    
+    ion-checkbox {
+      --size: 18px;
+      --checkbox-background-checked: #8B4513; /* Marron terre cuite */
+      --border-color-checked: #8B4513; /* Marron terre cuite */
+      --checkmark-color: white;
+    }
+    
+    ion-label {
+      font-size: 0.9rem;
+      color: #666666;
+      font-weight: 500;
+    }
+  }
+}
+
+.forgot-password {
+  a {
+    color: #8B4513; /* Marron terre cuite */
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: #E67E22; /* Orange */
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Bouton de connexion */
+.login-button {
+  --border-radius: 14px;
+  --box-shadow: 0 4px 16px rgba(46, 139, 87, 0.3);
+  height: 52px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  --background: #2E8B57; /* Vert artisanal */
+  --color: white;
+  --background-hover: #267349;
+  --background-activated: #267349;
+  margin-top: 1.5rem;
+  
+  &:disabled {
+    opacity: 0.7;
+    --box-shadow: none;
+  }
+  
+  ion-spinner {
+    color: white;
+  }
+  
+  @media (max-width: 600px) {
+    height: 48px;
+    font-size: 1rem;
+  }
+}
+
+/* Séparateur */
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+  color: #888888;
+  font-weight: 500;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0d6c9;
+  }
+  
+  &::before {
+    margin-right: 1rem;
+  }
+  
+  &::after {
+    margin-left: 1rem;
+  }
+}
+
+/* Lien d'inscription */
+.register-link {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #666666;
+  
+  a {
+    color: #8B4513; /* Marron terre cuite */
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: #E67E22; /* Orange */
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .login-card {
+    box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  }
+  
+  .logo-icon {
+    font-size: 2.5rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.2rem;
+  }
+  
+  ion-card-title {
+    font-size: 1.3rem;
+  }
+  
+  ion-card-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .options-container {
+    margin: 1rem 0;
+  }
+}
+
+/* Animation pour le chargement */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.login-card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+
+/* Améliorations pour l'accessibilité */
+ion-button:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Support pour le mode paysage */
+@media (max-height: 500px) and (orientation: landscape) {
+  .container {
+    padding: 0.5rem;
+    min-height: auto;
+  }
+  
+  .login-card {
+    margin: 1rem 0;
+  }
+}
+
+/* États de validation */
+.ng-invalid.ng-touched {
+  ion-item {
+    --border-color: #e74c3c;
+    
+    ion-label {
+      color: #e74c3c !important;
+    }
+  }
+}
+
+.ng-valid.ng-touched {
+  ion-item {
+    --border-color: #2E8B57; /* Vert artisanal */
+  }
+}
+
+/* Placeholder styles */
+ion-input::part(placeholder) {
+  color: #888888 !important;
+  font-style: italic !important;
+  opacity: 0.9 !important;
+  font-weight: 400 !important;
+}
+
+/* Style pour les champs en focus */
+ion-input.item-has-focus::part(native) {
+  background: rgba(230, 126, 34, 0.05) !important; /* Orange avec transparence */
+  border-left: 3px solid #E67E22 !important; /* Orange */
+}
+
+/* Animation de pulsation pour le bouton désactivé */
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0.7; }
+}
+
+.login-button:disabled {
+  animation: pulse 1.5s infinite;
+}

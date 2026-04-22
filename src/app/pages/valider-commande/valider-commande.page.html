@@ -1,0 +1,167 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="annulerCommande()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Finaliser la commande</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="validerCommande()" *ngIf="produits && produits.length > 0; else panierVide">
+    <!-- Informations personnelles -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Informations personnelles</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">Nom complet *</ion-label>
+          <ion-input [(ngModel)]="nomComplet" name="nomComplet" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Téléphone *</ion-label>
+          <ion-input [(ngModel)]="telephone" name="telephone" type="tel" 
+                    placeholder="77 12 45 67" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Adresse de livraison *</ion-label>
+          <ion-textarea [(ngModel)]="adresse" name="adresse" 
+                       rows="3" required></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Mode de paiement -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Paiement</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Mode de paiement *</ion-label>
+          <ion-select [(ngModel)]="modePaiement" name="modePaiement" 
+                     interface="action-sheet" placeholder="Choisir..." required>
+            <ion-select-option value="espèces">💵 Espèces à la livraison</ion-select-option>
+            <ion-select-option value="mobile_money">📱 Mobile Money</ion-select-option>
+            <ion-select-option value="carte_bancaire">💳 Carte Bancaire</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Mobile Money -->
+        <div *ngIf="modePaiement === 'mobile_money'" class="paiement-details">
+          <ion-item>
+            <ion-label>Opérateur</ion-label>
+            <ion-select [(ngModel)]="mobileMoneyOperateur" name="mobileMoneyOperateur">
+              <ion-select-option *ngFor="let op of operateursMobileMoney" [value]="op.value">
+                <ion-icon [name]="op.icon" slot="start"></ion-icon>
+                {{ op.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Numéro Mobile Money *</ion-label>
+            <ion-input [(ngModel)]="mobileMoneyNumero" name="mobileMoneyNumero" 
+                      type="tel" placeholder="77 123 45 67" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Nom du titulaire *</ion-label>
+            <ion-input [(ngModel)]="mobileMoneyNom" name="mobileMoneyNom" required></ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Carte Bancaire -->
+        <div *ngIf="modePaiement === 'carte_bancaire'" class="paiement-details">
+          <ion-item>
+            <ion-label position="floating">Numéro de carte *</ion-label>
+            <ion-input [(ngModel)]="carteNumero" name="carteNumero" 
+                      type="text" placeholder="1234 5678 9012 3456"
+                      (ionInput)="formaterNumeroCarte($event)" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Date d'expiration *</ion-label>
+            <ion-input [(ngModel)]="carteExpiration" name="carteExpiration" 
+                      type="text" placeholder="MM/AA"
+                      (ionInput)="formaterDateExpiration($event)" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">CVV *</ion-label>
+            <ion-input [(ngModel)]="carteCVV" name="carteCVV" 
+                      type="number" placeholder="123" required></ion-input>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Récapitulatif -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Récapitulatif de la commande</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="recap-item" *ngFor="let produit of produits">
+          <div class="recap-info">
+            <span class="recap-nom">{{ produit.nom }} × {{ produit.quantite }}</span>
+            <span class="recap-prix">{{ produit.prix * produit.quantite | number }} FCFA</span>
+          </div>
+        </div>
+
+        <ion-item-divider></ion-item-divider>
+
+        <div class="recap-total">
+          <div class="recap-line">
+            <span>Sous-total</span>
+            <span>{{ total | number }} FCFA</span>
+          </div>
+
+          <div class="recap-line" [class.livraison-gratuite]="livraisonGratuite">
+            <span>Frais de livraison</span>
+            <span>
+              {{ livraisonGratuite ? 'Gratuit' : (fraisLivraison | number) + ' FCFA' }}
+            </span>
+          </div>
+
+          <div class="recap-line total-final">
+            <strong>Total</strong>
+            <strong>{{ totalGeneral | number }} FCFA</strong>
+          </div>
+
+          <div *ngIf="livraisonGratuite" class="livraison-gratuite-badge">
+            <ion-icon name="rocket"></ion-icon>
+            Livraison offerte !
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Bouton de validation -->
+    <ion-button expand="block" type="submit" color="success" 
+               [disabled]="isSubmitting" class="valider-btn">
+      <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+      <span *ngIf="!isSubmitting">
+        <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+        Payer {{ totalGeneral | number }} FCFA
+      </span>
+    </ion-button>
+  </form>
+
+  <ng-template #panierVide>
+    <div class="empty-state">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h3>Panier vide</h3>
+      <p>Votre panier est vide. Ajoutez des produits avant de finaliser votre commande.</p>
+      <ion-button routerLink="/produits" expand="block" color="primary">
+        <ion-icon name="storefront" slot="start"></ion-icon>
+        Voir les produits
+      </ion-button>
+    </div>
+  </ng-template>
+</ion-content>

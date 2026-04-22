@@ -1,0 +1,30 @@
+.confirmation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  text-align: center;
+}
+
+.icon-success {
+  font-size: 80px;
+  color: #10dc60; // vert
+  margin-bottom: 20px;
+}
+
+.icon-failure {
+  font-size: 80px;
+  color: #f04141; // rouge
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+}

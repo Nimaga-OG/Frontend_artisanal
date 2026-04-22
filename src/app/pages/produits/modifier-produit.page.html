@@ -1,0 +1,192 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="annuler()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Modifier le produit</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Modifier le produit</ion-card-title>
+      <ion-card-subtitle>Mettez à jour les informations de votre produit artisanal</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="modifier()">
+        <ion-grid>
+          <ion-row>
+            <!-- Nom du produit -->
+            <ion-col size="12">
+              <ion-item [class.invalid]="formErrors.nom">
+                <ion-label position="floating">Nom du produit *</ion-label>
+                <ion-input 
+                  [(ngModel)]="produit.nom" 
+                  name="nom" 
+                  type="text"
+                  required
+                  (ionInput)="formErrors.nom = null">
+                </ion-input>
+                <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+              </ion-item>
+              <div class="error-message" *ngIf="formErrors.nom">{{ formErrors.nom }}</div>
+            </ion-col>
+
+            <!-- Description -->
+            <ion-col size="12">
+              <ion-item [class.invalid]="formErrors.description">
+                <ion-label position="floating">Description *</ion-label>
+                <ion-textarea 
+                  [(ngModel)]="produit.description" 
+                  name="description"
+                  rows="4"
+                  required
+                  (ionInput)="formErrors.description = null">
+                </ion-textarea>
+                <ion-icon name="document-text-outline" slot="start"></ion-icon>
+              </ion-item>
+              <div class="error-message" *ngIf="formErrors.description">{{ formErrors.description }}</div>
+              <div class="character-count" *ngIf="produit.description">
+                {{ produit.description.length }}/500 caractères
+              </div>
+            </ion-col>
+
+            <!-- Prix et Stock -->
+            <ion-col size="6">
+              <ion-item [class.invalid]="formErrors.prix">
+                <ion-label position="floating">Prix (FCFA) *</ion-label>
+                <ion-input 
+                  [(ngModel)]="produit.prix" 
+                  name="prix" 
+                  type="number"
+                  min="1"
+                  required
+                  (ionInput)="formErrors.prix = null">
+                </ion-input>
+                <ion-icon name="cash-outline" slot="start"></ion-icon>
+              </ion-item>
+              <div class="error-message" *ngIf="formErrors.prix">{{ formErrors.prix }}</div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="floating">Stock disponible</ion-label>
+                <ion-input 
+                  [(ngModel)]="produit.stock" 
+                  name="stock" 
+                  type="number"
+                  min="0">
+                </ion-input>
+                <ion-icon name="cube-outline" slot="start"></ion-icon>
+              </ion-item>
+            </ion-col>
+
+            <!-- Ville et Catégorie -->
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="floating">Ville</ion-label>
+                <ion-input 
+                  [(ngModel)]="produit.ville" 
+                  name="ville" 
+                  type="text">
+                </ion-input>
+                <ion-icon name="location-outline" slot="start"></ion-icon>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item [class.invalid]="formErrors.categorie">
+                <ion-label position="stacked">Catégorie *</ion-label>
+                <ion-select 
+                  [(ngModel)]="produit.categorie" 
+                  name="categorie" 
+                  placeholder="Choisir une catégorie"
+                  (ionChange)="formErrors.categorie = null">
+                  <ion-select-option *ngFor="let cat of categories" [value]="cat._id">
+                    {{ cat.nom }}
+                  </ion-select-option>
+                </ion-select>
+                <ion-icon name="grid-outline" slot="start"></ion-icon>
+              </ion-item>
+              <div class="error-message" *ngIf="formErrors.categorie">{{ formErrors.categorie }}</div>
+            </ion-col>
+
+            <!-- Image -->
+            <ion-col size="12">
+              <div class="image-section">
+                <ion-label class="section-label">Image du produit</ion-label>
+                
+                <div class="image-container" *ngIf="produit.image; else noImage">
+                  <img [src]="produit.image" alt="Image du produit" />
+                  <div class="image-actions">
+                    <ion-button fill="clear" color="danger" size="small" (click)="supprimerImage()">
+                      <ion-icon name="trash-outline" slot="start"></ion-icon>
+                      Supprimer
+                    </ion-button>
+                    <ion-button *ngIf="originalImage && imageChanged" fill="clear" color="medium" size="small" (click)="restaurerImageOriginale()">
+                      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+                      Annuler
+                    </ion-button>
+                  </div>
+                </div>
+
+                <ng-template #noImage>
+                  <div class="no-image-placeholder">
+                    <ion-icon name="image-outline"></ion-icon>
+                    <p>Aucune image</p>
+                  </div>
+                </ng-template>
+
+                <div class="upload-buttons">
+                  <ion-button expand="block" color="tertiary" (click)="choisirImage()">
+                    <ion-icon name="camera-outline" slot="start"></ion-icon>
+                    Appareil photo
+                  </ion-button>
+
+                  <ion-button expand="block" color="medium" fill="outline" (click)="ouvrirInputImage()">
+                    <ion-icon name="folder-open-outline" slot="start"></ion-icon>
+                    Galerie
+                  </ion-button>
+
+                  <input 
+                    type="file" 
+                    id="fileInput" 
+                    accept="image/*" 
+                    (change)="onFileSelected($event)" 
+                    style="display: none" />
+                </div>
+              </div>
+            </ion-col>
+
+            <!-- Boutons d'action -->
+            <ion-col size="12">
+              <div class="action-buttons">
+                <ion-button 
+                  expand="block" 
+                  color="success" 
+                  type="submit"
+                  [disabled]="isSubmitting">
+                  <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+                  {{ isSubmitting ? 'Modification...' : 'Enregistrer les modifications' }}
+                </ion-button>
+
+                <ion-button 
+                  expand="block" 
+                  color="medium" 
+                  fill="outline"
+                  (click)="annuler()">
+                  <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+                  Annuler
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

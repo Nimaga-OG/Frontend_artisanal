@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="annuler()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Changer le mot de passe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Sécurité du compte</ion-card-title>
+      <ion-card-subtitle>Modifiez votre mot de passe pour renforcer la sécurité</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="changer()">
+        <!-- Mot de passe actuel -->
+        <ion-item [class.invalid]="formErrors.motActuel" class="ion-margin-bottom">
+          <ion-label position="floating">Mot de passe actuel</ion-label>
+          <ion-input 
+            [(ngModel)]="motActuel" 
+            name="motActuel" 
+            [type]="showCurrentPassword ? 'text' : 'password'" 
+            required
+            (ionInput)="formErrors.motActuel = null">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('current')">
+            <ion-icon [name]="showCurrentPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <div class="error-message" *ngIf="formErrors.motActuel">
+          {{ formErrors.motActuel }}
+        </div>
+
+        <!-- Nouveau mot de passe -->
+        <ion-item [class.invalid]="formErrors.nouveauMot" class="ion-margin-bottom">
+          <ion-label position="floating">Nouveau mot de passe</ion-label>
+          <ion-input 
+            [(ngModel)]="nouveauMot" 
+            name="nouveauMot" 
+            [type]="showNewPassword ? 'text' : 'password'" 
+            required
+            (ionInput)="formErrors.nouveauMot = null">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('new')">
+            <ion-icon [name]="showNewPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        
+        <!-- Indicateur de force du mot de passe -->
+        <div class="password-strength" *ngIf="nouveauMot">
+          <p>Force du mot de passe:</p>
+          <div class="strength-meter">
+            <div class="strength-bar" [class]="'level-' + evaluerForceMotDePasse()"></div>
+          </div>
+          <div class="strength-tips" *ngIf="evaluerForceMotDePasse() < 4">
+            <small>Conseil: Utilisez des majuscules, des chiffres et des caractères spéciaux</small>
+          </div>
+        </div>
+        
+        <div class="error-message" *ngIf="formErrors.nouveauMot">
+          {{ formErrors.nouveauMot }}
+        </div>
+
+        <!-- Confirmation du mot de passe -->
+        <ion-item [class.invalid]="formErrors.confirmerMot" class="ion-margin-bottom">
+          <ion-label position="floating">Confirmer le nouveau mot de passe</ion-label>
+          <ion-input 
+            [(ngModel)]="confirmerMot" 
+            name="confirmerMot" 
+            [type]="showConfirmPassword ? 'text' : 'password'" 
+            required
+            (ionInput)="formErrors.confirmerMot = null">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirm')">
+            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <div class="error-message" *ngIf="formErrors.confirmerMot">
+          {{ formErrors.confirmerMot }}
+        </div>
+
+        <!-- Conseils de sécurité -->
+        <div class="security-tips">
+          <ion-label>Conseils de sécurité:</ion-label>
+          <ul>
+            <li>Minimum 8 caractères</li>
+            <li>Au moins une lettre majuscule et une minuscule</li>
+            <li>Au moins un chiffre</li>
+            <li>Au moins un caractère spécial (&#64;$!%*?&)</li>
+            <li>Différent de votre mot de passe actuel</li>
+          </ul>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="action-buttons">
+          <ion-button 
+            expand="block" 
+            color="primary" 
+            type="submit"
+            [disabled]="isSubmitting">
+            <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+            <span *ngIf="!isSubmitting">Modifier le mot de passe</span>
+          </ion-button>
+
+          <ion-button 
+            expand="block" 
+            color="medium" 
+            fill="outline"
+            (click)="annuler()"
+            [disabled]="isSubmitting">
+            Annuler
+          </ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

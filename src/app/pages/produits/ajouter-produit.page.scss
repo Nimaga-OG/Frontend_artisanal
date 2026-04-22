@@ -1,0 +1,551 @@
+/* STYLES SPÉCIFIQUES POUR LES INPUTS ET TEXTAREAS */
+ion-input, ion-textarea {
+  color: #333333 !important; /* Gris foncé */
+  font-size: 1.1em !important;
+  background: transparent !important;
+  caret-color: #E67E22 !important; /* Orange */
+  font-weight: 500 !important;
+}
+
+ion-input::part(native), ion-textarea::part(native) {
+  color: #333333 !important;
+  background: transparent !important;
+  padding: 16px 8px !important;
+}
+
+/* Styles spécifiques pour le placeholder */
+ion-input::part(placeholder), ion-textarea::part(placeholder) {
+  color: #888888 !important;
+  font-style: italic !important;
+  opacity: 0.9 !important;
+  font-weight: 400 !important;
+}
+
+/* Style quand l'input est en focus */
+ion-input.item-has-focus::part(native), 
+ion-textarea.item-has-focus::part(native) {
+  background: rgba(230, 126, 34, 0.05) !important; /* Orange avec transparence */
+  border-left: 3px solid #E67E22 !important; /* Orange */
+}
+
+/* ========== STYLES PRINCIPAUX ========== */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #8B4513; /* Marron terre cuite */
+    --color: white;
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+ion-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1); /* Ombre marron */
+  margin: 0;
+  background: white;
+}
+
+ion-card-header {
+  padding-bottom: 0;
+  
+  ion-card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #8B4513; /* Marron terre cuite */
+  }
+  
+  ion-card-subtitle {
+    color: #666666;
+    font-size: 0.9rem;
+  }
+}
+
+ion-card-content {
+  padding-top: 0;
+}
+
+/* Styles des labels */
+ion-item {
+  --border-radius: 8px;
+  --padding-start: 8px;
+  margin-bottom: 16px;
+  --background: #ffffff;
+  --border-color: #e0e0e0;
+  
+  ion-label {
+    color: #333333 !important; /* Gris foncé */
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    
+    &[position="floating"] {
+      color: #666666 !important;
+      font-weight: 500 !important;
+      
+      &.label-floating {
+        color: #8B4513 !important; /* Marron terre cuite */
+        font-weight: 600 !important;
+      }
+      
+      &.label-stacked {
+        color: #333333 !important; /* Gris foncé */
+        font-weight: 600 !important;
+        margin-bottom: 8px;
+        font-size: 0.9rem !important;
+      }
+    }
+    
+    &:not([position="floating"]) {
+      color: #333333 !important; /* Gris foncé */
+      font-weight: 600 !important;
+    }
+  }
+  
+  ion-icon[slot="start"] {
+    color: #8B4513; /* Marron terre cuite */
+    margin-right: 12px;
+    font-size: 1.2rem;
+    opacity: 0.8;
+  }
+  
+  &.invalid {
+    --border-color: #e74c3c;
+    --highlight-color-focused: #e74c3c;
+    
+    ion-label {
+      color: #e74c3c !important;
+    }
+    
+    ion-input::part(native), ion-textarea::part(native) {
+      border-left: 3px solid #e74c3c !important;
+      background: rgba(231, 76, 60, 0.05) !important;
+    }
+    
+    ion-icon[slot="start"] {
+      color: #e74c3c;
+    }
+  }
+  
+  &.item-has-focus {
+    ion-label[position="floating"] {
+      color: #E67E22 !important; /* Orange */
+      font-weight: 600 !important;
+    }
+    
+    ion-icon[slot="start"] {
+      color: #E67E22; /* Orange */
+      opacity: 1;
+    }
+  }
+}
+
+/* Styles spécifiques pour les selects */
+ion-select {
+  --placeholder-color: #888888;
+  --placeholder-opacity: 1;
+  
+  &::part(placeholder),
+  &::part(text) {
+    color: #333333; /* Gris foncé */
+    font-weight: 500;
+    font-size: 1.1em;
+  }
+  
+  &::part(icon) {
+    color: #8B4513; /* Marron terre cuite */
+  }
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin: -10px 0 16px 16px;
+  font-weight: 500;
+  background: rgba(231, 76, 60, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.character-count {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #888888;
+  margin: -10px 0 16px 0;
+  font-weight: 500;
+}
+
+.image-section {
+  margin-bottom: 20px;
+  
+  &.invalid {
+    .section-label {
+      color: #e74c3c;
+    }
+  }
+  
+  .section-label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #333333; /* Gris foncé */
+    font-size: 1rem;
+    background: rgba(139, 69, 19, 0.1); /* Marron terre cuite avec transparence */
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 4px solid #8B4513; /* Marron terre cuite */
+  }
+}
+
+.image-container {
+  text-align: center;
+  margin-bottom: 16px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fafafa;
+  
+  img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  
+  .image-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.no-image-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #888888;
+  
+  ion-icon {
+    font-size: 3rem;
+    margin-bottom: 8px;
+    color: #bdc3c7;
+  }
+  
+  p {
+    margin: 0;
+    font-style: italic;
+    font-weight: 500;
+  }
+}
+
+.upload-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+  
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 500;
+    
+    &:first-child {
+      --background: #2E8B57; /* Vert artisanal */
+      --color: white;
+      --background-hover: #267349;
+    }
+    
+    &:last-child {
+      --background: #8B4513; /* Marron terre cuite */
+      --color: white;
+      --background-hover: #6B3410;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  
+  ion-button {
+    --border-radius: 12px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+    
+    &:first-child {
+      --background: #E67E22; /* Orange */
+      --color: white;
+      --background-hover: #d35400;
+    }
+    
+    &:last-child {
+      --background: #2E8B57; /* Vert artisanal */
+      --color: white;
+      --background-hover: #267349;
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+    }
+  }
+}
+
+
+// ajouter-produit.page.scss - AJOUTER CES STYLES
+
+.supplementary-images-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.supplementary-image {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #eee6dc;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .image-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    
+    ion-button {
+      --padding-start: 4px;
+      --padding-end: 4px;
+      --padding-top: 4px;
+      --padding-bottom: 4px;
+      margin: 0;
+      height: 24px;
+      width: 24px;
+      
+      ion-icon {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.add-image-button {
+  width: 100px;
+  height: 100px;
+  border: 2px dashed #8B4513;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #faf6f0;
+  
+  &:hover {
+    background: #f5f0e6;
+    border-color: #6B3410;
+  }
+  
+  ion-icon {
+    font-size: 24px;
+    color: #8B4513;
+    margin-bottom: 5px;
+  }
+  
+  span {
+    font-size: 12px;
+    color: #8B4513;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+.image-count {
+  font-size: 0.8em;
+  color: #666;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+.image-info {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f6f2;
+  border-radius: 8px;
+  border-left: 3px solid #8B4513;
+  
+  p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.4;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .supplementary-image,
+  .add-image-button {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .upload-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  ion-card-header {
+    text-align: center;
+  }
+  
+  /* Ajustement des inputs sur mobile */
+  ion-input, ion-textarea {
+    font-size: 1em !important;
+  }
+  
+  ion-input::part(native), ion-textarea::part(native) {
+    padding: 14px 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ion-item {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    
+    ion-label {
+      font-size: 0.88rem !important;
+      font-weight: 600 !important;
+    }
+  }
+  
+  .image-section .section-label {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+  
+  /* Ajustement supplémentaire pour petits écrans */
+  ion-input, ion-textarea {
+    font-size: 0.95em !important;
+  }
+}
+
+/* Animation pour le chargement */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+ion-button[disabled] {
+  animation: pulse 1.5s infinite;
+}
+
+/* Amélioration de l'apparence des champs numériques */
+input[type="number"] {
+  text-align: right;
+  font-weight: 500;
+  color: #333333; /* Gris foncé */
+}
+
+/* Style pour les icônes dans les items */
+ion-item ion-icon[slot="start"] {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+/* Effet de focus amélioré pour les items */
+ion-item.item-has-focus {
+  --highlight-color-focused: #E67E22; /* Orange */
+  --border-width: 2px;
+  
+  ion-icon[slot="start"] {
+    color: #E67E22; /* Orange */
+    opacity: 1;
+  }
+}
+
+/* Styles pour les selects ouverts */
+ion-select::part(icon) {
+  transition: transform 0.3s ease;
+}
+
+ion-select.select-expanded::part(icon) {
+  transform: rotate(180deg);
+}
+
+/* Style spécifique pour les textareas */
+ion-textarea {
+  min-height: 100px !important;
+  
+  &::part(native) {
+    line-height: 1.5 !important;
+    padding: 12px !important;
+  }
+}
+
+/* Style pour les inputs de type number */
+ion-input[type="number"]::part(native) {
+  text-align: right !important;
+  font-family: monospace !important;
+  font-weight: 600 !important;
+}
+
+/* Highlight des champs obligatoires */
+ion-item:has(ion-input[required]) ion-label,
+ion-item:has(ion-textarea[required]) ion-label,
+ion-item:has(ion-select[required]) ion-label {
+  &::after {
+    content: " *";
+    color: #e74c3c;
+  }
+}
+
+/* Styles pour les boutons de suppression d'image */
+.image-actions ion-button {
+  --color: #e74c3c;
+  --background: rgba(231, 76, 60, 0.1);
+  --background-hover: rgba(231, 76, 60, 0.2);
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}

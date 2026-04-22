@@ -1,0 +1,952 @@
+/* STYLES PRINCIPAUX */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #8B4513; /* Marron terre cuite */
+    --color: white;
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+.loading-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+  .loading-center {
+    text-align: center;
+    
+    ion-spinner {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      color: #8B4513; /* Marron terre cuite */
+    }
+    
+    p {
+      color: #333333; /* Gris foncé */
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Galerie d'images */
+.image-gallery {
+  margin-bottom: 20px;
+  
+  .main-image-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(139, 69, 19, 0.15); /* Ombre marron */
+    
+    .main-image {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+      
+      @media (max-width: 768px) {
+        height: 280px;
+      }
+      
+      @media (max-width: 480px) {
+        height: 220px;
+      }
+    }
+    
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      --padding-start: 8px;
+      --padding-end: 8px;
+      --background: rgba(139, 69, 19, 0.8); /* Marron terre cuite */
+      --color: white;
+      --border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      
+      &.prev {
+        left: 16px;
+      }
+      
+      &.next {
+        right: 16px;
+      }
+      
+      @media (max-width: 480px) {
+        width: 36px;
+        height: 36px;
+        
+        &.prev {
+          left: 8px;
+        }
+        
+        &.next {
+          right: 8px;
+        }
+      }
+    }
+    
+    .favori-indicator {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(139, 69, 19, 0.8); /* Marron terre cuite */
+      border-radius: 50%;
+      padding: 10px;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      
+      &:active {
+        transform: scale(1.1);
+      }
+      
+      ion-icon {
+        font-size: 24px;
+        color: white;
+      }
+      
+      @media (max-width: 480px) {
+        top: 12px;
+        right: 12px;
+        padding: 8px;
+        
+        ion-icon {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+/* Carte produit */
+ion-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  margin: 0 0 24px 0;
+  background: white;
+  
+  ion-card-header {
+    padding: 20px 20px 12px;
+    
+    ion-card-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #333333; /* Gris foncé */
+      margin-bottom: 12px;
+      line-height: 1.3;
+      
+      @media (max-width: 768px) {
+        font-size: 1.4rem;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 1.3rem;
+      }
+    }
+    
+    ion-card-subtitle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      
+      .price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #8B4513; /* Marron terre cuite */
+        
+        @media (max-width: 480px) {
+          font-size: 1.3rem;
+        }
+      }
+      
+      .stock-badge {
+        font-size: 0.95rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        
+        &[color="success"] {
+          --background: #2E8B57; /* Vert artisanal */
+          --color: white;
+        }
+        
+        &[color="danger"] {
+          --background: #e74c3c;
+          --color: white;
+        }
+        
+        &[color="warning"] {
+          --background: #f39c12;
+          --color: white;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  }
+  
+  ion-card-content {
+    padding: 0 20px 20px;
+  }
+}
+
+/* Sections de contenu */
+.description-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #faf6f0;
+  border-radius: 12px;
+  border-left: 4px solid #8B4513; /* Marron terre cuite */
+  
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333333; /* Gris foncé */
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &::before {
+      content: "📋";
+      font-size: 1.1rem;
+    }
+  }
+  
+  p {
+    color: #555555;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.details-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+  
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #f8f6f2;
+    border-radius: 10px;
+    border-left: 3px solid #E67E22; /* Orange */
+    
+    ion-icon {
+      color: #8B4513; /* Marron terre cuite */
+      font-size: 1.3rem;
+      min-width: 24px;
+    }
+    
+    span {
+      color: #333333; /* Gris foncé */
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 12px;
+      
+      ion-icon {
+        font-size: 1.1rem;
+      }
+      
+      span {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+/* Boutons d'action */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+  
+  ion-button {
+    --border-radius: 12px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+    
+    &:first-child {
+      --background: #E67E22; /* Orange */
+      --color: white;
+      --background-hover: #d35400;
+      --background-activated: #d35400;
+    }
+    
+    &:last-child {
+      --background: #2E8B57; /* Vert artisanal */
+      --color: white;
+      --background-hover: #267349;
+      --background-activated: #267349;
+    }
+    
+    &[disabled] {
+      opacity: 0.6;
+    }
+    
+    &#add-to-cart-btn.adding {
+      animation: addToCart 0.5s ease;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    
+    ion-button {
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+@keyframes addToCart {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Produits similaires */
+.similar-products {
+  margin-top: 32px;
+  padding: 20px 0;
+  
+  h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333333; /* Gris foncé */
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    
+    &::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #8B4513; /* Marron terre cuite */
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .similar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .similar-product {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 3px 10px rgba(139, 69, 19, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid #eee6dc;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.15);
+      }
+      
+      img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover img {
+        transform: scale(1.05);
+      }
+      
+      .similar-info {
+        h4 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #333333; /* Gris foncé */
+          margin: 0 0 6px 0;
+          line-height: 1.3;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .price {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #8B4513; /* Marron terre cuite */
+          margin: 0;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        padding: 14px;
+        
+        img {
+          height: 120px;
+        }
+        
+        .similar-info h4 {
+          font-size: 0.95rem;
+        }
+        
+        .similar-info .price {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// details-produit.page.scss - AJOUTER CES STYLES
+
+.image-counter-badge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.images-info {
+  text-align: center;
+  margin-top: 10px;
+  
+  ion-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+.thumbnail-overlay {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(139, 69, 19, 0.9);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  ion-icon {
+    font-size: 12px;
+    color: white;
+  }
+}
+
+.thumbnail-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #8B4513;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  ion-icon {
+    font-size: 12px;
+    color: white;
+  }
+}
+
+.touch-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Amélioration des miniatures
+.image-thumbnails {
+  .thumbnail {
+    position: relative;
+    
+    &.active {
+      border-color: #8B4513;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.fullscreen-thumbnails {
+  .fullscreen-thumbnail {
+    position: relative;
+    
+    &.active {
+      border-color: #8B4513;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .image-counter-badge {
+    bottom: 12px;
+    left: 12px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  .thumbnail-overlay,
+  .thumbnail-indicator {
+    width: 16px;
+    height: 16px;
+    
+    ion-icon {
+      font-size: 10px;
+    }
+  }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+
+/* Améliorations pour l'accessibilité */
+ion-button:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Animation de chargement */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading-center ion-spinner {
+  animation: pulse 1.5s infinite;
+}
+
+/* Styles pour les états de rupture de stock */
+.action-buttons ion-button[disabled] {
+  --background: #bdc3c7;
+  --color: #7f8c8d;
+}
+
+/* Responsive design amélioré */
+@media (max-width: 1024px) {
+  .similar-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .similar-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .similar-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .image-gallery .main-image-container .main-image {
+    height: 200px;
+  }
+  
+  ion-card-header {
+    padding: 16px 16px 8px;
+    
+    ion-card-title {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* Support pour le mode paysage sur mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .image-gallery .main-image-container .main-image {
+    height: 200px;
+  }
+  
+  .similar-products {
+    margin-top: 24px;
+    padding: 16px 0;
+  }
+}
+
+/* === AJOUTS POUR LE PLEIN ÉCRAN === */
+
+/* Bouton plein écran */
+.fullscreen-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(139, 69, 19, 0.8);
+  border-radius: 50%;
+  padding: 10px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+
+  &:hover {
+    background: rgba(139, 69, 19, 1);
+    transform: scale(1.1);
+  }
+
+  ion-icon {
+    font-size: 24px;
+    color: white;
+  }
+
+  @media (max-width: 480px) {
+    top: 12px;
+    left: 12px;
+    padding: 8px;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+/* Miniatures sous l'image principale */
+.image-thumbnails {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 0 10px;
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+
+    &.active {
+      border-color: #8B4513;
+      transform: scale(1.1);
+    }
+
+    &:hover {
+      border-color: #8B4513;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 480px) {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+/* MODAL PLEIN ÉCRAN */
+.fullscreen-modal {
+  --width: 100%;
+  --height: 100%;
+  --border-radius: 0;
+
+  .fullscreen-content {
+    --background: #000;
+
+    .fullscreen-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      --background: rgba(255, 255, 255, 0.2);
+      --color: white;
+      --border-radius: 50%;
+      width: 50px;
+      height: 50px;
+
+      ion-icon {
+        font-size: 28px;
+      }
+
+      @media (max-width: 480px) {
+        top: 10px;
+        right: 10px;
+        width: 44px;
+        height: 44px;
+
+        ion-icon {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .fullscreen-image-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 20px;
+
+      .fullscreen-image {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+        border-radius: 8px;
+      }
+
+      .nav-btn-full {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --background: rgba(255, 255, 255, 0.3);
+        --color: white;
+        --border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        backdrop-filter: blur(10px);
+
+        &.prev {
+          left: 30px;
+        }
+
+        &.next {
+          right: 30px;
+        }
+
+        ion-icon {
+          font-size: 32px;
+        }
+
+        @media (max-width: 768px) {
+          width: 50px;
+          height: 50px;
+
+          &.prev {
+            left: 15px;
+          }
+
+          &.next {
+            right: 15px;
+          }
+
+          ion-icon {
+            font-size: 28px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          width: 44px;
+          height: 44px;
+
+          ion-icon {
+            font-size: 24px;
+          }
+        }
+      }
+
+      .image-counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+
+    .fullscreen-thumbnails {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      overflow-x: auto;
+
+      .fullscreen-thumbnail {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+
+        &.active {
+          border-color: #8B4513;
+          transform: scale(1.1);
+        }
+
+        &:hover {
+          border-color: #8B4513;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        @media (max-width: 480px) {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+  }
+}
+
+/* Animation d'entrée/sortie du modal */
+.fullscreen-modal::part(content) {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Support pour le mode paysage */
+@media (max-width: 768px) and (orientation: landscape) {
+  .fullscreen-image-container {
+    padding: 10px !important;
+
+    .fullscreen-image {
+      max-height: 70vh !important;
+    }
+  }
+
+  .fullscreen-thumbnails {
+    padding: 10px !important;
+
+    .fullscreen-thumbnail {
+      width: 60px !important;
+      height: 60px !important;
+    }
+  }
+}
+
+/* Amélioration de l'accessibilité */
+.fullscreen-btn:focus-visible,
+.thumbnail:focus-visible,
+.fullscreen-thumbnail:focus-visible {
+  outline: 2px solid #8B4513;
+  outline-offset: 2px;
+}
+
+/* Transition fluide pour les changements d'image */
+.main-image,
+.fullscreen-image {
+  transition: opacity 0.3s ease;
+}
+
+/* Effet de zoom au clic sur l'image */
+.main-image {
+  cursor: zoom-in;
+}
+
+.fullscreen-image {
+  cursor: zoom-out;
+}

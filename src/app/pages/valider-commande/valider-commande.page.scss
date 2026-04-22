@@ -1,0 +1,455 @@
+/* STYLES PRINCIPAUX */
+ion-content {
+  --background: #FDF6EC; /* Blanc cassé */
+  --padding-bottom: 20px;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #8B4513; /* Marron terre cuite */
+    --color: white;
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+ion-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+  background: white;
+  border: 1px solid #eee6dc;
+  
+  ion-card-header {
+    padding: 20px 20px 12px;
+    background: #f8f6f2;
+    border-bottom: 2px solid #8B4513; /* Marron terre cuite */
+    
+    ion-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #333333; /* Gris foncé */
+      text-align: center;
+      
+      @media (max-width: 480px) {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+ion-item {
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-bottom: 16px;
+  --background: #ffffff;
+  --border-color: #e0d6c9;
+  
+  ion-label[position="floating"] {
+    font-weight: 600;
+    color: #333333; /* Gris foncé */
+    font-size: 0.95rem;
+  }
+  
+  ion-input, ion-select, ion-textarea {
+    --color: #333333; /* Gris foncé */
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  &.item-has-focus {
+    --border-color: #E67E22; /* Orange */
+    --highlight-color-focused: #E67E22; /* Orange */
+    
+    ion-label[position="floating"] {
+      color: #E67E22; /* Orange */
+    }
+  }
+}
+
+/* Détails de paiement */
+.paiement-details {
+  padding: 12px 0;
+  background: #faf6f0;
+  border-radius: 12px;
+  margin-top: 16px;
+  border-left: 4px solid #E67E22; /* Orange */
+  
+  ion-item {
+    --background: #ffffff;
+    margin: 12px 16px;
+    
+    &:last-child {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+/* Récapitulatif des produits */
+.recap-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0e9e0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .recap-info {
+    flex: 1;
+    
+    .recap-nom {
+      display: block;
+      color: #333333; /* Gris foncé */
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+    
+    .recap-prix {
+      color: #8B4513; /* Marron terre cuite */
+      font-weight: 700;
+      font-size: 1rem;
+    }
+  }
+}
+
+.recap-total {
+  padding: 16px 0 0 0;
+  
+  .recap-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: #555555;
+    font-size: 1rem;
+    border-bottom: 1px solid #f0e9e0;
+    
+    &.livraison-gratuite {
+      color: #2E8B57; /* Vert artisanal */
+      font-weight: 600;
+    }
+    
+    &.total-final {
+      border-top: 2px solid #8B4513; /* Marron terre cuite */
+      margin-top: 12px;
+      padding-top: 16px;
+      font-size: 1.2rem;
+      color: #333333; /* Gris foncé */
+      font-weight: 700;
+    }
+  }
+}
+
+.livraison-gratuite-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(46, 139, 87, 0.1); /* Vert artisanal avec transparence */
+  color: #2E8B57; /* Vert artisanal */
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 16px;
+  font-weight: 600;
+  border: 1px dashed #2E8B57; /* Vert artisanal */
+  
+  ion-icon {
+    font-size: 1.3rem;
+  }
+}
+
+/* Bouton de validation */
+.valider-btn {
+  --border-radius: 16px;
+  --padding-top: 22px;
+  --padding-bottom: 22px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 32px 0 24px;
+  --background: #2E8B57; /* Vert artisanal */
+  --color: white;
+  --background-hover: #267349;
+  --background-activated: #267349;
+  
+  &:disabled {
+    opacity: 0.7;
+  }
+  
+  ion-spinner {
+    color: white;
+  }
+  
+  @media (max-width: 480px) {
+    --padding-top: 20px;
+    --padding-bottom: 20px;
+    font-size: 1rem;
+    margin: 24px 0 20px;
+  }
+}
+
+/* État vide */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666666;
+  
+  ion-icon {
+    font-size: 4rem;
+    color: #8B4513; /* Marron terre cuite */
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+  
+  h3 {
+    color: #333333; /* Gris foncé */
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  
+  p {
+    margin-bottom: 32px;
+    line-height: 1.5;
+    font-size: 1rem;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  ion-button {
+    --border-radius: 12px;
+    font-weight: 600;
+    --background: #E67E22; /* Orange */
+    --color: white;
+    --background-hover: #d35400;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ion-card {
+    margin-bottom: 20px;
+  }
+  
+  ion-card-header {
+    padding: 16px 16px 10px;
+  }
+  
+  ion-card-content {
+    padding: 16px;
+  }
+  
+  .recap-item {
+    padding: 12px 0;
+    
+    .recap-info {
+      .recap-nom {
+        font-size: 0.95rem;
+      }
+      
+      .recap-prix {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  ion-item {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .paiement-details {
+    padding: 8px 0;
+    
+    ion-item {
+      margin: 8px 12px;
+    }
+  }
+  
+  .recap-total {
+    .recap-line {
+      font-size: 0.95rem;
+      padding: 8px 0;
+      
+      &.total-final {
+        font-size: 1.1rem;
+        padding-top: 14px;
+      }
+    }
+  }
+  
+  .empty-state {
+    padding: 60px 16px;
+    
+    ion-icon {
+      font-size: 3.5rem;
+    }
+    
+    h3 {
+      font-size: 1.1rem;
+    }
+    
+    p {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+/* Animation pour le chargement */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.valider-btn:disabled {
+  animation: pulse 1.5s infinite;
+}
+
+/* Indicateurs de champ requis */
+ion-item[required] ion-label::after {
+  content: " *";
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* Amélioration de l'accessibilité */
+ion-input:focus, ion-select:focus, ion-textarea:focus {
+  --border-color: #E67E22; /* Orange */
+}
+
+/* Styles pour les sélecteurs */
+ion-select::part(placeholder),
+ion-select::part(text) {
+  color: #333333; /* Gris foncé */
+  font-weight: 500;
+}
+
+ion-select::part(icon) {
+  color: #8B4513; /* Marron terre cuite */
+}
+
+/* Styles pour les options de paiement */
+ion-select-option {
+  color: #333333; /* Gris foncé */
+  
+  ion-icon {
+    color: #8B4513; /* Marron terre cuite */
+    margin-right: 8px;
+  }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF6EC; /* Blanc cassé */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B4513; /* Marron terre cuite */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B3410;
+}
+
+/* Support pour le mode paysage */
+@media (max-height: 500px) and (orientation: landscape) {
+  .empty-state {
+    padding: 40px 20px;
+  }
+  
+  ion-card {
+    margin-bottom: 16px;
+  }
+}
+
+/* États de validation */
+.ng-invalid.ng-touched {
+  ion-item {
+    --border-color: #e74c3c;
+    
+    ion-label {
+      color: #e74c3c !important;
+    }
+  }
+}
+
+.ng-valid.ng-touched {
+  ion-item {
+    --border-color: #2E8B57; /* Vert artisanal */
+  }
+}
+
+/* Animation d'apparition */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+ion-card {
+  animation: slideIn 0.4s ease;
+}
+
+/* Délai d'animation pour chaque carte */
+ion-card:nth-child(1) { animation-delay: 0.1s; }
+ion-card:nth-child(2) { animation-delay: 0.2s; }
+ion-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Style pour les séparateurs */
+ion-item-divider {
+  --background: #f8f6f2;
+  --color: #8B4513; /* Marron terre cuite */
+  font-weight: 600;
+  padding: 8px 16px;
+  margin: 16px 0;
+}
+
+/* Amélioration de l'expérience mobile */
+@media (max-width: 380px) {
+  ion-card-header {
+    padding: 14px;
+    
+    ion-card-title {
+      font-size: 1rem;
+    }
+  }
+  
+  ion-card-content {
+    padding: 14px;
+  }
+  
+  .valider-btn {
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    font-size: 0.95rem;
+  }
+}

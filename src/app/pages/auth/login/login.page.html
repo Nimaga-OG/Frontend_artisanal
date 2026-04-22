@@ -1,0 +1,88 @@
+<ion-content class="ion-padding">
+  <div class="container">
+    <ion-card class="login-card">
+      <ion-card-header>
+        <div class="logo-container">
+          <ion-icon name="lock-closed" class="logo-icon"></ion-icon>
+        </div>
+        <ion-card-title>Connexion</ion-card-title>
+        <ion-card-subtitle>Content de vous revoir le plateforme ArtisanalSUGU</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form (ngSubmit)="login()">
+          <!-- Email -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!email_valide && email">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input 
+              [(ngModel)]="email" 
+              name="email" 
+              type="email" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+          </ion-item>
+          <div class="error-message" *ngIf="!email_valide && email">
+            Veuillez entrer une adresse email valide
+          </div>
+
+          <!-- Mot de passe -->
+          <ion-item class="ion-margin-bottom" [class.invalid]="!mot_de_passe_valide && mot_de_passe">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input 
+              [(ngModel)]="mot_de_passe" 
+              name="mot_de_passe" 
+              [type]="showPassword ? 'text' : 'password'" 
+              required
+              (ionInput)="validerFormulaire()"
+              (ionBlur)="validerFormulaire()">
+            </ion-input>
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <div class="error-message" *ngIf="!mot_de_passe_valide && mot_de_passe">
+            Le mot de passe est requis
+          </div>
+
+          <!-- Options -->
+          <div class="options-container">
+            <ion-item lines="none">
+              <ion-checkbox slot="start" [(ngModel)]="rememberMe" name="rememberMe"></ion-checkbox>
+              <ion-label>Se souvenir de moi</ion-label>
+            </ion-item>
+            
+            <div class="forgot-password">
+              <a (click)="resetPassword()">Mot de passe oublié?</a>
+            </div>
+          </div>
+
+          <!-- Bouton de connexion -->
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            class="ion-margin-top login-button"
+            [disabled]="!validerFormulaire() || isLoading">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Se connecter</span>
+          </ion-button>
+
+          <!-- Séparateur -->
+          <div class="separator">
+            <span>Ou</span>
+          </div>
+
+          <!-- Inscription -->
+          <ion-text color="medium">
+            <p class="ion-text-center register-link">
+              Pas encore inscrit ? <a routerLink="/register">Créer un compte</a>
+            </p>
+          </ion-text>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

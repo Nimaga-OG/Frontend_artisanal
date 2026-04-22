@@ -1,0 +1,563 @@
+<ion-header> 
+  <ion-toolbar style="--background: #8B4513; --color: white;">
+    <ion-title>Administration</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="rafraichir()" style="--color: white;">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="exporterDonnees()" style="--color: white;">
+        <ion-icon name="download-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: #FDF6EC;">
+  <!-- Menu de navigation -->
+  <ion-segment [(ngModel)]="currentSection" (ionChange)="changerSection(currentSection)" class="custom-segment">
+    <ion-segment-button value="dashboard">
+      <ion-label>Dashboard</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="produits">
+      <ion-label>Produits</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="ventes">
+      <ion-label>Commandes</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="utilisateurs">
+      <ion-label>Utilisateurs</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="categories">
+      <ion-label>Catégories</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- État de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" style="--color: #E67E22;"></ion-spinner>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Section Dashboard améliorée -->
+  <div *ngIf="!isLoading && currentSection === 'dashboard'" class="dashboard-container">
+    <!-- Cartes de statistiques avec animations -->
+    <div class="stats-grid">
+      <ion-card class="stat-card animated-card" 
+                (click)="changerSection('produits')" 
+                button 
+                [@cardAnimation]="'in'">
+        <div class="card-icon">
+          <ion-icon name="cube-outline" class="pulse"></ion-icon>
+        </div>
+        <ion-card-header>
+          <ion-card-title [@countAnimation]="stats.totalProduits || 0">
+            {{ stats.totalProduits || 0 }}
+          </ion-card-title>
+          <ion-card-subtitle>Produits</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="progress-stats">
+            <div class="progress-item">
+              <span class="progress-label">En stock</span>
+              <div class="progress-bar">
+                <div class="progress-fill" 
+                     [style.width.%]="getStockPercentage()"
+                     [@progressAnimation]></div>
+              </div>
+              <span class="progress-value">{{ stats.produitsEnStock || 0 }}</span>
+            </div>
+            <div class="progress-item">
+              <span class="progress-label">Rupture</span>
+              <div class="progress-bar">
+                <div class="progress-fill rupture" 
+                     [style.width.%]="getRupturePercentage()"
+                     [@progressAnimation]></div>
+              </div>
+              <span class="progress-value">{{ stats.produitsRupture || 0 }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card animated-card" 
+                (click)="changerSection('ventes')" 
+                button 
+                [@cardAnimation]="'in'">
+        <div class="card-icon">
+          <ion-icon name="cart-outline" class="bounce"></ion-icon>
+        </div>
+        <ion-card-header>
+          <ion-card-title [@countAnimation]="stats.totalVentes || 0">
+            {{ stats.totalVentes || 0 }}
+          </ion-card-title>
+          <ion-card-subtitle>Commandes</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="trend-indicator" [class.positive]="getSalesTrend() > 0">
+            <ion-icon [name]="getSalesTrend() > 0 ? 'trending-up' : 'trending-down'"></ion-icon>
+            <span>{{ getSalesTrend() }}% ce mois</span>
+          </div>
+          <p class="secondary-stat">{{ stats.ventesMois || 0 }} commandes ce mois</p>
+          <p class="secondary-stat" *ngIf="stats.commandesEnAttente > 0">
+            {{ stats.commandesEnAttente }} en attente
+          </p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card animated-card" 
+                (click)="changerSection('utilisateurs')" 
+                button 
+                [@cardAnimation]="'in'">
+        <div class="card-icon">
+          <ion-icon name="people-outline" class="rotate"></ion-icon>
+        </div>
+        <ion-card-header>
+          <ion-card-title [@countAnimation]="stats.totalUtilisateurs || 0">
+            {{ stats.totalUtilisateurs || 0 }}
+          </ion-card-title>
+          <ion-card-subtitle>Utilisateurs</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="user-stats">
+            <div class="user-type">
+              <span class="user-badge admin"></span>
+              <span>Admin: {{ stats.utilisateursAdmin || 0 }}</span>
+            </div>
+            <div class="user-type">
+              <span class="user-badge vendeur"></span>
+              <span>Vendeurs: {{ stats.utilisateursVendeur || 0 }}</span>
+            </div>
+            <div class="user-type">
+              <span class="user-badge client"></span>
+              <span>Clients: {{ stats.utilisateursClient || 0 }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card animated-card revenue-card" [@cardAnimation]="'in'">
+        <div class="card-icon">
+          <ion-icon name="cash-outline" class="pulse"></ion-icon>
+        </div>
+        <ion-card-header>
+          <ion-card-title [@countAnimation]="stats.chiffreAffaires || 0">
+            {{ stats.chiffreAffaires | number }} FCFA
+          </ion-card-title>
+          <ion-card-subtitle>Chiffre d'Affaires</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="revenue-comparison">
+            <div class="revenue-item">
+              <span>Ce mois:</span>
+              <strong>{{ stats.caMois | number }} FCFA</strong>
+            </div>
+            <div class="revenue-item">
+              <span>Mois dernier:</span>
+              <strong>{{ stats.caMoisPrecedent | number }} FCFA</strong>
+            </div>
+            <div class="growth-indicator" [class.positive]="getRevenueGrowth() > 0">
+              <ion-icon [name]="getRevenueGrowth() > 0 ? 'trending-up' : 'trending-down'"></ion-icon>
+              <span>{{ getRevenueGrowth() }}%</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Graphiques principaux -->
+    <div class="charts-grid">
+      <!-- Graphique des ventes -->
+      <ion-card class="chart-card custom-card" [@slideInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Évolution des Ventes</ion-card-title>
+          <ion-card-subtitle>30 derniers jours</ion-card-subtitle>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="changeChartPeriod('30j')" [color]="chartPeriod === '30j' ? 'primary' : 'medium'">
+              30j
+            </ion-button>
+            <ion-button fill="clear" (click)="changeChartPeriod('90j')" [color]="chartPeriod === '90j' ? 'primary' : 'medium'">
+              90j
+            </ion-button>
+            <ion-button fill="clear" (click)="changeChartPeriod('1an')" [color]="chartPeriod === '1an' ? 'primary' : 'medium'">
+              1an
+            </ion-button>
+          </ion-buttons>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-container">
+            <canvas #salesChartCanvas></canvas>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Graphique circulaire des statuts de commandes -->
+      <ion-card class="chart-card custom-card" [@slideInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Répartition des Commandes</ion-card-title>
+          <ion-card-subtitle>Par statut</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-container">
+            <canvas #ordersChartCanvas></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item" *ngFor="let statut of statutsCommandes">
+              <span class="legend-color" [style.background]="getStatusColor(statut.value)"></span>
+              <span class="legend-label">{{ statut.label }}</span>
+              <span class="legend-value">{{ compterVentesParStatut(statut.value) }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Graphique des produits par catégorie -->
+      <ion-card class="chart-card custom-card" [@slideInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Produits par Catégorie</ion-card-title>
+          <ion-card-subtitle>Répartition du stock</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-container">
+            <canvas #categoriesChartCanvas></canvas>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Graphique des performances -->
+      <ion-card class="chart-card custom-card" [@slideInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Performance Mensuelle</ion-card-title>
+          <ion-card-subtitle>Ventes vs Objectifs</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-container">
+            <canvas #performanceChartCanvas></canvas>
+          </div>
+          <div class="performance-stats">
+            <div class="performance-item">
+              <span class="performance-label">Objectif:</span>
+              <span class="performance-value">{{ stats.objectifMensuel | number }} FCFA</span>
+            </div>
+            <div class="performance-item">
+              <span class="performance-label">Atteint:</span>
+              <span class="performance-value">{{ stats.caMois | number }} FCFA</span>
+            </div>
+            <div class="performance-item">
+              <span class="performance-label">Taux:</span>
+              <span class="performance-value" [class.positive]="getAchievementRate() >= 100">
+                {{ getAchievementRate() }}%
+              </span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Tableau de bord rapide -->
+    <div class="quick-dashboard">
+      <!-- Produits populaires -->
+      <ion-card class="quick-card custom-card" [@fadeInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Produits Populaires</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="changerSection('produits')">
+            Voir tout
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list lines="none">
+            <ion-item *ngFor="let produit of produitsPopulaires; let i = index" 
+                     class="popular-product" [@staggerAnimation]="i">
+              <ion-thumbnail slot="start">
+                <img [src]="produit.imageUrl" [alt]="produit.nom" class="product-image">
+                <div class="product-rank">{{ i + 1 }}</div>
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{ produit.nom }}</h3>
+                <p>{{ produit.prix | number }} FCFA</p>
+                <p class="sales-count">{{ produit.ventesCount || 0 }} ventes</p>
+              </ion-label>
+              <ion-badge slot="end" color="success" *ngIf="produit.tauxSatisfaction">
+                {{ produit.tauxSatisfaction }}%
+              </ion-badge>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Activité récente -->
+      <ion-card class="quick-card custom-card" [@fadeInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Activité Récente</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="changerSection('logs')">
+            Voir les logs
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list lines="none">
+            <ion-item *ngFor="let activite of activitesRecentes; let i = index" 
+                     class="activity-item" [@staggerAnimation]="i">
+              <ion-avatar slot="start">
+                <ion-icon [name]="getActivityIcon(activite.type)" 
+                         [color]="getActivityColor(activite.type)"></ion-icon>
+              </ion-avatar>
+              <ion-label>
+                <h3>{{ activite.titre }}</h3>
+                <p>{{ activite.description }}</p>
+                <p class="activity-time">{{ formatRelativeTime(activite.date) }}</p>
+              </ion-label>
+              <ion-badge slot="end" [color]="getActivityColor(activite.type)">
+                {{ activite.type }}
+              </ion-badge>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Alertes et notifications -->
+      <ion-card class="quick-card custom-card alert-card" [@fadeInAnimation]>
+        <ion-card-header>
+          <ion-card-title>Alertes</ion-card-title>
+          <ion-badge color="warning" *ngIf="alertesNonLues > 0">
+            {{ alertesNonLues }}
+          </ion-badge>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="alerts-container">
+            <div *ngFor="let alerte of alertesImportantes" 
+                 class="alert-item" 
+                 [class]="'alert-' + alerte.niveau"
+                 [@alertAnimation]>
+              <div class="alert-icon">
+                <ion-icon [name]="getAlertIcon(alerte.niveau)"></ion-icon>
+              </div>
+              <div class="alert-content">
+                <h4>{{ alerte.titre }}</h4>
+                <p>{{ alerte.message }}</p>
+                <span class="alert-time">{{ formatRelativeTime(alerte.date) }}</span>
+              </div>
+              <ion-button fill="clear" size="small" (click)="resoudreAlerte(alerte)">
+                <ion-icon name="checkmark"></ion-icon>
+              </ion-button>
+            </div>
+            
+            <div class="no-alerts" *ngIf="alertesImportantes.length === 0">
+              <ion-icon name="checkmark-done" color="success"></ion-icon>
+              <p>Aucune alerte importante</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Indicateurs de performance -->
+    <ion-card class="kpi-card custom-card" [@slideInAnimation]>
+      <ion-card-header>
+        <ion-card-title>Indicateurs Clés de Performance</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="kpi-grid">
+          <div class="kpi-item" *ngFor="let kpi of indicateursKPI" 
+               [class.positive]="kpi.tendance > 0"
+               [class.negative]="kpi.tendance < 0">
+            <div class="kpi-icon">
+              <ion-icon [name]="kpi.icon"></ion-icon>
+            </div>
+            <div class="kpi-content">
+              <h3>{{ kpi.valeur }}</h3>
+              <p>{{ kpi.label }}</p>
+              <span class="kpi-trend">
+                <ion-icon [name]="kpi.tendance > 0 ? 'trending-up' : 'trending-down'"></ion-icon>
+                {{ kpi.tendance }}%
+              </span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Section Produits (originale) -->
+  <div *ngIf="!isLoading && currentSection === 'produits'">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      placeholder="Rechercher un produit..."
+      animated="true"
+      (ionInput)="onSearchChange($event)"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <ion-list>
+      <ion-item *ngFor="let produit of filteredProduits" class="product-item">
+        <ion-thumbnail slot="start">
+          <img [src]="produit.imageUrl" alt="{{ produit.nom }}" (error)="produit.imageUrl = 'assets/images/placeholder-product.jpg'">
+        </ion-thumbnail>
+        <ion-label>
+          <h3>{{ produit.nom }}</h3>
+          <p>{{ produit.prix | number }} FCFA</p>
+          <p>Stock: {{ produit.stock }}</p>
+          <p>Vendeur: {{ produit.utilisateur?.nom_utilisateur || 'Inconnu' }}</p>
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button style="--background: #E67E22; --color: white;" [routerLink]="['/produits/modifier', produit._id]">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button style="--background: #2E8B57; --color: white;" (click)="supprimerProduit(produit._id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+
+    <!-- Scroll infini -->
+    <ion-infinite-scroll (ionInfinite)="onInfiniteScroll($event, 'produits')">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Chargement de plus de produits...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <div *ngIf="filteredProduits.length === 0" class="empty-state">
+      <p>Aucun produit trouvé</p>
+    </div>
+  </div>
+
+  <!-- Section Commandes (originale) -->
+  <div *ngIf="!isLoading && currentSection === 'ventes'">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      placeholder="Rechercher une commande..."
+      animated="true"
+      (ionInput)="onSearchChange($event)"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <ion-list>
+      <ion-item *ngFor="let vente of filteredVentes" class="sale-item">
+        <ion-label>
+          <h3>Commande #{{ vente._id?.slice(-6) || 'N/A' }}</h3>
+          <p>{{ vente.acheteur?.email || 'Email non disponible' }}</p>
+          <p>{{ vente.total | number }} FCFA - {{ formatDate(vente.date || vente.createdAt) }}</p>
+          <p>Statut: 
+            <span class="statut-indicator" [class]="'statut-' + vente.statut"></span>
+            {{ vente.statut }}
+          </p>
+        </ion-label>
+        <ion-badge slot="end" [color]="getStatutColor(vente.statut)">
+          {{ vente.statut }}
+        </ion-badge>
+        <ion-buttons slot="end">
+          <ion-button style="--background: #E67E22; --color: white;" (click)="modifierStatutVente(vente, 'paye')" *ngIf="vente.statut === 'en_attente'">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button style="--background: #2E8B57; --color: white;" (click)="modifierStatutVente(vente, 'livre')" *ngIf="vente.statut === 'paye'">
+            <ion-icon name="car-outline"></ion-icon>
+          </ion-button>
+          <ion-button style="--background: #8B4513; --color: white;" (click)="modifierStatutVente(vente, 'annule')" *ngIf="vente.statut !== 'annule'">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+
+    <!-- Scroll infini -->
+    <ion-infinite-scroll (ionInfinite)="onInfiniteScroll($event, 'ventes')">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Chargement de plus de commandes...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <div *ngIf="filteredVentes.length === 0" class="empty-state">
+      <p>Aucune commande trouvée</p>
+    </div>
+  </div>
+
+  <!-- Section Utilisateurs (originale) -->
+  <div *ngIf="!isLoading && currentSection === 'utilisateurs'">
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      placeholder="Rechercher un utilisateur..."
+      animated="true"
+      (ionInput)="onSearchChange($event)"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <ion-list>
+      <ion-item *ngFor="let utilisateur of filteredUtilisateurs" class="user-item">
+        <ion-avatar slot="start">
+          <img [src]="utilisateur.photo || 'assets/images/avatar-default.png'" alt="{{ utilisateur.nom_utilisateur }}">
+        </ion-avatar>
+        <ion-label>
+          <h3>{{ utilisateur.email }}</h3>
+          <p>{{ utilisateur.nom_utilisateur || 'Sans nom' }}</p>
+          <p>Inscrit le {{ formatDate(utilisateur.date_creation || utilisateur.createdAt) }}</p>
+          <p>Rôle: {{ utilisateur.role || 'utilisateur' }}</p>
+        </ion-label>
+        <ion-badge slot="end" [color]="utilisateur.actif ? 'success' : 'danger'">
+          {{ utilisateur.actif ? 'Actif' : 'Inactif' }}
+        </ion-badge>
+        <ion-buttons slot="end">
+          <ion-button style="--background: #2E8B57; --color: white;" (click)="modifierStatutUtilisateur(utilisateur, true)" *ngIf="!utilisateur.actif">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button style="--background: #8B4513; --color: white;" (click)="modifierStatutUtilisateur(utilisateur, false)" *ngIf="utilisateur.actif">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+
+    <div *ngIf="filteredUtilisateurs.length === 0" class="empty-state">
+      <p>Aucun utilisateur trouvé</p>
+    </div>
+  </div>
+
+  <!-- Section Catégories (originale) -->
+  <div *ngIf="!isLoading && currentSection === 'categories'">
+    <div class="categories-grid">
+      <ion-card *ngFor="let categorie of categories" class="category-card custom-card">
+        <ion-card-header>
+          <ion-card-title>{{ categorie.nom }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ categorie.description || 'Aucune description' }}</p>
+          <p>Produits: {{ categorie.nombreProduits || 0 }}</p>
+        </ion-card-content>
+        <ion-buttons>
+          <ion-button fill="clear" style="--color: #E67E22;">
+            <ion-icon name="pencil-outline" slot="start"></ion-icon>
+            Modifier
+          </ion-button>
+          <ion-button fill="clear" style="--color: #8B4513;">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Supprimer
+          </ion-button>
+        </ion-buttons>
+      </ion-card>
+    </div>
+
+    <div *ngIf="categories.length === 0" class="empty-state">
+      <ion-icon name="grid-outline"></ion-icon>
+      <h3>Aucune catégorie</h3>
+      <p>Commencez par créer votre première catégorie</p>
+    </div>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button style="--background: #E67E22;">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <!-- Refresh pour toutes les sections -->
+  <ion-refresher slot="fixed" (ionRefresh)="rafraichir($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Tirer pour rafraîchir"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation...">
+    </ion-refresher-content>
+  </ion-refresher>
+</ion-content>

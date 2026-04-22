@@ -1,0 +1,74 @@
+// theme/variables.scss
+
+:root {
+  // Font
+  --ion-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  // Espacements
+  --ion-padding: 16px;
+  --ion-margin: 16px;
+
+  // Bordures
+  --ion-border-radius: 8px;
+  --ion-border-width: 1px;
+  --ion-border-color: var(--ion-color-light-shade);
+
+  // Ombres
+  --ion-shadow-color: rgba(0, 0, 0, 0.1);
+  --ion-shadow-sm: 0 2px 4px var(--ion-shadow-color);
+  --ion-shadow-md: 0 4px 8px var(--ion-shadow-color);
+  --ion-shadow-lg: 0 8px 16px var(--ion-shadow-color);
+
+  /* ===============================
+     🎨 Palette Artisanat
+     =============================== */
+
+  /** Marron terre cuite (Primary) **/
+  --ion-color-primary: #8B4513;
+  --ion-color-primary-rgb: 139, 69, 19;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #7a3d11;
+  --ion-color-primary-tint: #9c5730;
+
+  /** Vert artisanal (Secondary) **/
+  --ion-color-secondary: #2E8B57;
+  --ion-color-secondary-rgb: 46, 139, 87;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #27794c;
+  --ion-color-secondary-tint: #42976d;
+
+  /** Orange Safran (Accent / Tertiaire) **/
+  --ion-color-tertiary: #E67E22;
+  --ion-color-tertiary-rgb: 230, 126, 34;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #cc6f1d;
+  --ion-color-tertiary-tint: #ea8b38;
+
+  /** Indigo artisanal (Alternative / Contraste) **/
+  --ion-color-success: #3F51B5;
+  --ion-color-success-rgb: 63, 81, 181;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #37489f;
+  --ion-color-success-tint: #5563bc;
+
+  /** Erreur **/
+  --ion-color-danger: #c0392b;
+  --ion-color-danger-rgb: 192, 57, 43;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #a93226;
+  --ion-color-danger-tint: #cd4d40;
+
+  /** Fond neutre **/
+  --ion-background-color: #FDF6EC;
+  --ion-text-color: #333333;
+
+  /** Autres **/
+  --ion-color-light: #E0E0E0;
+  --ion-color-medium: #999999;
+  --ion-color-dark: #2C3E50;
+}
