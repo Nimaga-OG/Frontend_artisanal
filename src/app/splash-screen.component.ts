@@ -80,7 +80,14 @@ export class SplashScreenComponent implements AfterViewInit {
   }
 
   private redirectToLogin() {
-    // TOUJOURS rediriger vers login (comme demandé)
-    this.router.navigate(['/login']);
+    // Vérifier si l'utilisateur est déjà connecté
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      // Utilisateur connecté => aller à la page produits
+      this.router.navigate(['/produits']);
+    } else {
+      // Non connecté => aller au login
+      this.router.navigate(['/login']);
+    }
   }
 }

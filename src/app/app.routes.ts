@@ -32,13 +32,6 @@ import { MesCommandesPage } from './pages/panier/mes-commandes.page';
 import { AdminPage } from './pages/admin/admin.page';
 
 export const routes: Routes = [
-  // Splash Screen - UNIQUEMENT pour le premier lancement
-   {
-    path: '',
-    redirectTo: 'splash',
-    pathMatch: 'full'
-  },
-
   // ✅ Splash Screen - Protégé par le guard de premier lancement
   {
     path: 'splash',
@@ -46,14 +39,14 @@ export const routes: Routes = [
     canActivate: [SplashGuard] // ← NOUVEAU GUARD
   },
 
-  // Public
+  // Public routes (no auth required)
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
 
   // ⚠️ CHANGEMENT CRITIQUE : La route racine devient la page produits (protégée)
-  { 
-    path: '',  // Route racine protégée
-    component: ProduitsPage, 
+  {
+    path: '',
+    component: ProduitsPage,
     canActivate: [AuthGuard],
     data: { showTabs: true }
   },

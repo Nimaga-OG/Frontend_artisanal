@@ -59,7 +59,7 @@ export class AuthService {
   // 🔓 Déconnexion
   logout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('currentUser');
     this.userSubject.next(null);
   }
 
@@ -87,7 +87,7 @@ export class AuthService {
   }
 
   private getLocalUser(): Utilisateur | null {
-    const u = localStorage.getItem('user');
+    const u = localStorage.getItem('currentUser');
     return u ? JSON.parse(u) : null;
   }
 
