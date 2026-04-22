@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UtilisateurService {
-  private base = 'http://localhost:5000/api/utilisateurs/me';
+  private base = 'https://bakend-artisanal.onrender.com/api/utilisateurs/me';
 
   constructor(private http: HttpClient) {}
 

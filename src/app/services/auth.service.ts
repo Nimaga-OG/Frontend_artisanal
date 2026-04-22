@@ -15,8 +15,8 @@ export interface Utilisateur {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private base = 'http://localhost:5000/api/auth'; // 🔧 S'assurer que /auth est inclus
-  private apiUrl = 'http://localhost:5000/api'; // ⚠️ Ajout de la propriété manquante
+  private base = 'https://bakend-artisanal.onrender.com/api/auth'; // 🔧 S'assurer que /auth est inclus
+  private apiUrl = 'https://bakend-artisanal.onrender.com/api'; // ⚠️ Ajout de la propriété manquante
 
   private userSubject = new BehaviorSubject<Utilisateur | null>(this.getLocalUser());
   public user$ = this.userSubject.asObservable();

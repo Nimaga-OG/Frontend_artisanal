@@ -169,7 +169,7 @@ getImageUrl(imagePath: string): string {
   // Nettoyer le chemin pour éviter "uploads/uploads"
   const cleanPath = imagePath.replace(/^\/?uploads[\/\\]?/, '');
 
-  return `http://localhost:5000/uploads/${cleanPath}`;
+  return `https://bakend-artisanal.onrender.com/uploads/${cleanPath}`;
 }
 
 

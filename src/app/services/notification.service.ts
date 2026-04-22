@@ -11,7 +11,7 @@ export class NotificationService {
 
   constructor(private toastController: ToastController) {
     // Connexion au backend (ajuste l’URL si besoin)
-    this.socket = io('http://localhost:5000');
+    this.socket = io('https://bakend-artisanal.onrender.com');
 
     // Écoute des notifications
     this.socket.on('notification', async (data: any) => {

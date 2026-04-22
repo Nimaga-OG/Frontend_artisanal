@@ -76,7 +76,7 @@ export class ProduitService {
   }
 
   getMesProduits(): Observable<any[]> {
-    return this.http.get<any>('http://localhost:5000/api/produits/mes-produits').pipe(
+    return this.http.get<any>('https://bakend-artisanal.onrender.com/api/produits/mes-produits').pipe(
       map(response => {
         const produits = this.extractProduitsArray(response);
         return produits.map(produit => this.formatImageUrls(produit));
@@ -102,7 +102,7 @@ export class ProduitService {
     // Supprimer tout préfixe "uploads/" pour éviter le double
     relativePath = relativePath.replace(/^\/?uploads[\\/]/, '');
     
-    return `http://localhost:5000/uploads/${relativePath}`;
+    return `https://bakend-artisanal.onrender.com/uploads/${relativePath}`;
   }
 
   getProduitsParCategorie(categorieId: string): Observable<any[]> {

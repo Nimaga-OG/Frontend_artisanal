@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommandeService {
-  private baseUrl = 'http://localhost:5000/api/commandes'; // 🔁 adapte si nécessaire
+  private baseUrl = 'https://bakend-artisanal.onrender.com/api/commandes'; // 🔁 adapte si nécessaire
 
   constructor(private http: HttpClient) {}
 

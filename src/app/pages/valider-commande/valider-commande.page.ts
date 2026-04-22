@@ -242,7 +242,7 @@ export class ValiderCommandePage implements OnInit, OnDestroy {
       });
 
       const response: any = await this.http
-        .post('http://localhost:5000/api/commandes', commande, { headers })
+        .post('https://bakend-artisanal.onrender.com/api/commandes', commande, { headers })
         .toPromise();
 
       await loading.dismiss();

@@ -120,7 +120,7 @@ export class MesCommandesPage implements OnInit {
   // Nettoyer le chemin pour éviter le double 'uploads/'
   const cleanPath = imagePath.replace(/^\/?uploads[\/\\]?/, '');
 
-  return `http://localhost:5000/uploads/${cleanPath}`;
+  return `https://bakend-artisanal.onrender.com/uploads/${cleanPath}`;
 }
 async doRefresh(event: any) {
   await this.getCommandes();

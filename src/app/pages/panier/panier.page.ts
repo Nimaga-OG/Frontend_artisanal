@@ -201,7 +201,7 @@ export class PanierPage implements OnInit, OnDestroy {
   // Nettoyer le chemin pour éviter le double 'uploads/'
   const cleanPath = imagePath.replace(/^\/?uploads[\/\\]?/, ''); // ✅ Regex corrigée
 
-  return `http://localhost:5000/uploads/${cleanPath}`;
+  return `https://bakend-artisanal.onrender.com/uploads/${cleanPath}`;
 }
 
 
